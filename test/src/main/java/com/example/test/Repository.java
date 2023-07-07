@@ -5,7 +5,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-@Stateless
+@Singleton
 public class Repository {
 
     @PersistenceContext
