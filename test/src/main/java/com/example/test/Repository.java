@@ -25,9 +25,7 @@ public class Repository {
     }
 
     public void deleteTickets(){
-        manager.createQuery("DELETE FROM Ticket").executeUpdate();
-//        List<Ticket> query= manager.createNamedQuery("Ticket.getAll",Ticket.class).getResultList();
-//        query.forEach(item->manager.remove(item));
+          manager.createNamedQuery("Ticket.deleteAll").executeUpdate();
     }
 
 }
