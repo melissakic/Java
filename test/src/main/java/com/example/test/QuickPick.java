@@ -17,5 +17,4 @@ public class QuickPick {
         repo.insert(ticket);
         return "Your ticket is: " + ticket.getTicket();
     }
-
 }
