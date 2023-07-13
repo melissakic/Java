@@ -14,6 +14,9 @@ public class Loto {
     @Inject
     private Parser parser;
 
+    @Inject
+    private Generator generator;
+
     private Ticket gameNumbers;
     private List<Ticket> yourTickets;
     public Loto(){
@@ -22,26 +25,26 @@ public class Loto {
     }
 
     public String generateGameNumbers(){
-        String generatedNumbers=Generator.generateFiveNumbers();
+        String generatedNumbers=generator.generateFiveNumbers();
         gameNumbers=new Ticket(generatedNumbers);
-        return "Game ticket is:"+generatedNumbers;
+        return generatedNumbers;
     }
 
     public String getUserTickets(){
-        String result="Your tickets are:\n";
+        StringBuilder result= new StringBuilder();
         yourTickets=repo.fetchTickets();
         for(Ticket t:yourTickets){
-            result+=t.getTicket()+"\n";
+            result.append(t.getTicket()).append("|");
         }
-        return  result;
+        return result.toString();
     }
 
 
-    public String startGame(){
-         int prizeThird=0;
-         int prizeSecond=0;
-         int prizeFirst=0;
-        int shots=0;
+    public Prize startGame(){
+        Prize prize=new Prize(0,0,0);
+        prize.setClientTickets(getUserTickets());
+        prize.setGameNumbers(generateGameNumbers());
+        int shots;
         ArrayList<Integer> game=parser.parse(gameNumbers);
         for(Ticket t:yourTickets){
         ArrayList<Integer> user=parser.parse(t);
@@ -50,12 +53,11 @@ public class Loto {
                 if(game.get(i).equals(user.get(i)))shots++;
             }
             switch (shots) {
-                case 3 -> prizeThird++;
-                case 4 -> prizeSecond++;
-                case 5 -> prizeFirst++;
+                case 3 -> prize.incrementThird();
+                case 4 -> prize.incrementSecond();
+                case 5 -> prize.incrementFirst();
             }
     }
-        return "Number of third level prizes:"+prizeThird+"\n"+"Number of second level prizes:"+prizeSecond+
-                "\n"+"Number of jackpots:"+prizeFirst;
+        return prize;
     }
 }

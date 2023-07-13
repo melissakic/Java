@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Response;
 
 @Path("/delete-tickets")
 public class DeleteTickets {
@@ -11,9 +12,10 @@ public class DeleteTickets {
     Repository repo;
 
     @GET
-    @Produces("text/plain")
-    public String delete(){
+    @Produces("application/json")
+    public Response delete(){
         repo.deleteTickets();
-        return "Tickets are deleted";
+        return Response.ok("Deleted").build();
+
     }
 }

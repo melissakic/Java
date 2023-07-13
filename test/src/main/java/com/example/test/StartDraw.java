@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Response;
 
 @Path("/start-draw")
 public class StartDraw {
@@ -15,13 +16,15 @@ public class StartDraw {
     Loto loto;
 
     @GET
-    @Produces("text/plain")
-    public String startGame(){
-        if(repo.getNumberOfTickets()<3) return "To start game you must have at least 3 tickets you have " + repo.getNumberOfTickets();
-        String flow="Starting game...\n";
-        flow+=loto.generateGameNumbers()+"\n";
-        flow+=loto.getUserTickets();
-        flow+=loto.startGame()+"\n";
-        return flow;
+    @Produces("application/json")
+    public Response startGame(){
+        if(repo.getNumberOfTickets()<3){
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Not enough tickets you have "+repo.getNumberOfTickets())
+                    .build();
+        }
+        else return Response.ok(loto.startGame()).build();
+
     };
 }
