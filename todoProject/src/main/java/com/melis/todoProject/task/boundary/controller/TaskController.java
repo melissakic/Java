@@ -43,8 +43,10 @@ public class TaskController {
     }
 
     @PostMapping("/task/add")
-    public void addTask(@ModelAttribute TaskAndToDoListsDTO task) {
-        
+    public String addTask(@ModelAttribute TaskAndToDoListsDTO task) {
+        task.getTaskModel().setTaskEndTime(taskService.convertStringToTimestamp(task.getSelectedEndTime()));
+        taskService.addTask(task);
+        return "redirect:/task/add";
     }
 
 }

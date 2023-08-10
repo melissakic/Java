@@ -39,4 +39,10 @@ public class ToDoListServiceImpl implements ToDoListService {
         });
         return list;
     }
+
+    @Transactional
+    @Override
+    public ToDoListModel getListByName(String name) {
+        return toDoListRepository.findByListName(name);
+    }
 }

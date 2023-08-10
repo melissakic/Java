@@ -8,4 +8,6 @@ public interface ToDoListService {
     public void addNewListToLoggedUser(ToDoListModel toDoListModel, String username);
 
     public List<String> getListsFromUser(String username);
+
+    public ToDoListModel getListByName(String name);
 }
