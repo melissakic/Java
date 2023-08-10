@@ -1,15 +1,17 @@
 package com.melis.todoProject.user.entity.model;
 
 
+import com.melis.todoProject.todolist.entity.model.ToDoListModel;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-@EqualsAndHashCode
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
 @Entity
 @Table(name = "User")
 public class UserModel {
@@ -20,15 +22,6 @@ public class UserModel {
     private Integer id;
     private String username;
     private String password;
-//    @OneToMany
-//    private ArrayList<ToDoListModel> toDoLists;
-
-    public UserModel() {
-    }
-
-    public UserModel(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
+    @OneToMany
+    private List<ToDoListModel> toDoLists = new ArrayList<>();
 }
