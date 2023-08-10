@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Add new to do list</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1 th:align="center">Add new list</h1>
+<form th:align="center" action="#" th:action="@{/list/add}" th:object="${todoList}" method="POST">
+    <p>List name: <input type="text" th:field="*{listName}"/></p>
+    <p>List description: <input type="text" th:field="*{listDescription}"/></p>
+    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+</form>
+</body>
+</html>

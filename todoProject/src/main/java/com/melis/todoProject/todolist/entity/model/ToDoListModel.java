@@ -3,15 +3,14 @@ package com.melis.todoProject.todolist.entity.model;
 import com.melis.todoProject.task.entity.model.TaskModel;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.List;
 
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 @Entity
 @Table(name = "ToDoList")
 public class ToDoListModel {
@@ -23,13 +22,5 @@ public class ToDoListModel {
     private String listName;
     private String listDescription;
     @OneToMany
-    private ArrayList<TaskModel> listTasks = new ArrayList<TaskModel>();
-
-    public ToDoListModel() {
-    }
-
-    public ToDoListModel(String listName, String listDescription) {
-        this.listName = listName;
-        this.listDescription = listDescription;
-    }
+    private List<TaskModel> task = new ArrayList<>();
 }

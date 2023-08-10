@@ -1,16 +1,16 @@
 package com.melis.todoProject.task.entity.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
+@Data
 @Entity
-@Table(name="task")
+@Table(name = "task")
 public class TaskModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,14 +19,5 @@ public class TaskModel {
     private Integer id;
     private String taskName;
     private Timestamp taskEndTime;
-    private boolean done=false;
-
-    public TaskModel(){}
-
-    public TaskModel(String taskName, Timestamp taskEndTime,boolean done){
-        this.taskName=taskName;
-        this.taskEndTime=taskEndTime;
-        this.done=done;
-    }
-
+    private boolean done = false;
 }

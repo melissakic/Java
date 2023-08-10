@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Add new task to list</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1 th:align="center">Add new task</h1>
+<form th:align="center" action="#" th:action="@{/task/add}" th:object="${task}" method="POST">
+    <p>Task name: <input type="text" th:field="${task.taskModel.taskName}"/></p>
+    <p>Status:
+        <select th:field="${task.taskModel.done}">
+            <option value=false>In progress</option>
+            <option value=true>Done</option>
+        </select>
+    </p>
+    <p>Endtime(yyyy-mm-dd):
+        <input type="text" th:field="${task.selectedEndTime}"/>
+    </p>
+    <p>List to insert: <select class="form-control" id="dropDownList" th:field="*{selectedList}">
+        <option value="0">select option</option>
+        <option th:each="option : ${task.lists}" th:value="${option}"
+                th:text="${option}"></option>
+    </select></p>
+    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+</form>
+</body>
+</html>
