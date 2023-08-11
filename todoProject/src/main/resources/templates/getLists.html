@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
-<h2 th:align="center">All tasks</h2>
+<h2 th:align="center">All lists</h2>
 <h3 th:align="center"><a th:href="@{/list/add}">Add new list</a></h3>
 <h3 th:align="center"><a th:href="@{/task/add}">Add new task</a></h3>
 <table th:align="center">
@@ -30,7 +30,21 @@
         <td><span th:text="${list.listName}"> Name </span></td>
         <td><span th:text="${list.listDescription}"> Description</span></td>
         <td><a th:href="@{/list/get/{id}(id=${list.id})}">Open list</a></td>
-        <td><a th:href="@{/list/delete/{id}(id=${list.id})}">Delete list</a></td>
+        <td>
+            <button th:attr="onclick='deleteItem(' + ${list.id} + ')'">Delete</button>
+        </td>
+        <script>
+            function deleteItem(id) {
+                if (confirm("Are you sure you want to delete this item?")) {
+                    fetch(`/list/delete/${id}`, {
+                        method: "DELETE"
+                    })
+                        .then(response => {
+                            window.location.href = "/list/get";
+                        })
+                }
+            }
+        </script>
     </tr>
     </tbody>
 </table>

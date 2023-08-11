@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 @SessionAttributes(names = "user")
 @Controller
-public class UserRegistrationController {
+public class UserController {
     private final UserService userService;
 
     @Autowired
-    public UserRegistrationController(UserServiceImp userService) {
+    public UserController(UserServiceImp userService) {
         this.userService = userService;
     }
 
