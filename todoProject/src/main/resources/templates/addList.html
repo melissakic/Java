@@ -6,6 +6,7 @@
 </head>
 <body>
 <h1 th:align="center">Add new list</h1>
+<h3 th:align="center"><a th:href="@{/list/get}">Home</a></h3>
 <form th:align="center" action="#" th:action="@{/list/add}" th:object="${todoList}" method="POST">
     <p>List name: <input type="text" th:field="*{listName}"/></p>
     <p>List description: <input type="text" th:field="*{listDescription}"/></p>

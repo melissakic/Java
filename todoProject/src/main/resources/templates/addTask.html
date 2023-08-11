@@ -6,6 +6,7 @@
 </head>
 <body>
 <h1 th:align="center">Add new task</h1>
+<h3 th:align="center"><a th:href="@{/list/get}">Home</a></h3>
 <form th:align="center" action="#" th:action="@{/task/add}" th:object="${task}" method="POST">
     <p>Task name: <input type="text" th:field="${task.taskModel.taskName}"/></p>
     <p>Status:
