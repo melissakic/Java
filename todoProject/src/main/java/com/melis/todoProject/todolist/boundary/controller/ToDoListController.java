@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -32,14 +33,21 @@ public class ToDoListController {
     @PostMapping("/list/add")
     public String addNewList(@ModelAttribute ToDoListModel toDoList, Authentication authentication) {
         toDoListService.addNewListToLoggedUser(toDoList, authentication.getName());
-        return "redirect:/list/add";
+        return "redirect:/list/get";
     }
 
-    
+
     @GetMapping("list/get")
     public String getAllLists(Authentication authentication, Model model) {
         List<ToDoListModel> lists = toDoListService.getListFromUser(authentication.getName());
         model.addAttribute("lists", lists);
         return "getLists";
+    }
+
+    @GetMapping("list/get/{id}")
+    public String getListById(@PathVariable(value = "id") Integer id, Model model) {
+        ToDoListModel list = toDoListService.getListById(id);
+        model.addAttribute("list", list.getTask());
+        return "getOneList";
     }
 }

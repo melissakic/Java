@@ -13,4 +13,6 @@ public interface ToDoListService {
 
     public ToDoListModel getListByName(String name);
 
+    public ToDoListModel getListById(Integer id);
+
 }

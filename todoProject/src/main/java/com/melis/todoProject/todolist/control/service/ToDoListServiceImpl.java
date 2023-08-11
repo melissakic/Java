@@ -1,5 +1,6 @@
 package com.melis.todoProject.todolist.control.service;
 
+import com.melis.todoProject.task.entity.model.TaskModel;
 import com.melis.todoProject.todolist.control.repository.ToDoListRepository;
 import com.melis.todoProject.todolist.entity.model.ToDoListModel;
 import com.melis.todoProject.user.control.service.UserService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ToDoListServiceImpl implements ToDoListService {
@@ -51,5 +53,16 @@ public class ToDoListServiceImpl implements ToDoListService {
     public List<ToDoListModel> getListFromUser(String username) {
         List<ToDoListModel> lista = new ArrayList<>(userService.getUser(username).getToDoLists());
         return lista;
+    }
+
+    @Transactional
+    @Override
+    public ToDoListModel getListById(Integer id) {
+        Optional<ToDoListModel> fetced = toDoListRepository.findById(id);
+        ToDoListModel data = new ToDoListModel();
+        for (TaskModel task : fetced.get().getTask()) {
+            data.getTask().add(task);
+        }
+        return data;
     }
 }

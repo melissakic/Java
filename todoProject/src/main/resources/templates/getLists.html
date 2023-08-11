@@ -6,8 +6,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
-<th:block th:each="task:${lists}">
-    <p th:text="${task.listName}"></p>
-</th:block>
+<h2 th:align="center">All tasks</h2>
+<table th:align="center">
+    <thead>
+    <tr>
+        <th> Id</th>
+        <th></th>
+        <th colspan="2"> Name</th>
+        <th> Description</th>
+        <th>Open</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${lists.isEmpty()}">
+        <td colspan="3"> List is empty</td>
+    </tr>
+    <tr th:each="list : ${lists}">
+        <td colspan="2"><span th:text="${list.id}"> ID </span></td>
+        <td></td>
+        <td><span th:text="${list.listName}"> Name </span></td>
+        <td><span th:text="${list.listDescription}"> Description</span></td>
+        <td><a th:href="@{/list/get/{id}(id=${list.id})}">Open list</a></td>
+    </tr>
+    </tbody>
+</table>
+<!--    <table th:align="center">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>List id</th>-->
+<!--            <th>Task id</th>-->
+<!--            <th>Task name</th>-->
+<!--            <th>Task end time</th>-->
+<!--            <th>DELETE</th>-->
+<!--            <th>DONE</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        <tr th:if="${lists.isEmpty()}">-->
+<!--            <td colspan="3"> List is empty</td>-->
+<!--        </tr>-->
+<!--        <tr th:each="l : ${list.task}">-->
+<!--            <td><span th:text="${list.id}">List id</span></td>-->
+<!--            <td><span th:text="${list.id}">Task id</span></td>-->
+<!--            <td><span th:text="${l.taskName}">Task name</span></td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
 </body>
 </html>
