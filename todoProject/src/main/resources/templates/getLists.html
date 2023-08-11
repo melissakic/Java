@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home page</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+<th:block th:each="task:${lists}">
+    <p th:text="${task.listName}"></p>
+</th:block>
+</body>
+</html>

@@ -8,7 +8,6 @@ import com.melis.todoProject.todolist.control.service.ToDoListService;
 import com.melis.todoProject.todolist.control.service.ToDoListServiceImpl;
 import com.melis.todoProject.user.control.service.UserService;
 import com.melis.todoProject.user.control.service.UserServiceImp;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -32,11 +31,10 @@ public class TaskController {
         this.toDoListService = toDoListService;
     }
 
-    @Transactional
     @GetMapping("/task/add")
     public String formAddTask(Model model, Authentication authentication) {
         TaskAndToDoListsDTO taskAndToDoLists = new TaskAndToDoListsDTO();
-        taskAndToDoLists.setLists(toDoListService.getListsFromUser(authentication.getName()));
+        taskAndToDoLists.setLists(toDoListService.getListNamesFromUser(authentication.getName()));
         taskAndToDoLists.setTaskModel(new TaskModel());
         model.addAttribute("task", taskAndToDoLists);
         return "addTask";

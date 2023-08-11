@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 public class ToDoListController {
 
@@ -31,5 +33,13 @@ public class ToDoListController {
     public String addNewList(@ModelAttribute ToDoListModel toDoList, Authentication authentication) {
         toDoListService.addNewListToLoggedUser(toDoList, authentication.getName());
         return "redirect:/list/add";
+    }
+
+    
+    @GetMapping("list/get")
+    public String getAllLists(Authentication authentication, Model model) {
+        List<ToDoListModel> lists = toDoListService.getListFromUser(authentication.getName());
+        model.addAttribute("lists", lists);
+        return "getLists";
     }
 }

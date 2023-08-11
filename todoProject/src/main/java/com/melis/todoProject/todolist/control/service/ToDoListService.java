@@ -7,7 +7,10 @@ import java.util.List;
 public interface ToDoListService {
     public void addNewListToLoggedUser(ToDoListModel toDoListModel, String username);
 
-    public List<String> getListsFromUser(String username);
+    public List<String> getListNamesFromUser(String username);
+
+    public List<ToDoListModel> getListFromUser(String username);
 
     public ToDoListModel getListByName(String name);
+
 }

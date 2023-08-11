@@ -31,7 +31,7 @@ public class ToDoListServiceImpl implements ToDoListService {
 
     @Transactional
     @Override
-    public List<String> getListsFromUser(String username) {
+    public List<String> getListNamesFromUser(String username) {
         List<String> list = new ArrayList<>();
         List<ToDoListModel> retrievedLists = userService.getUser(username).getToDoLists();
         retrievedLists.forEach(item -> {
@@ -44,5 +44,12 @@ public class ToDoListServiceImpl implements ToDoListService {
     @Override
     public ToDoListModel getListByName(String name) {
         return toDoListRepository.findByListName(name);
+    }
+
+    @Transactional
+    @Override
+    public List<ToDoListModel> getListFromUser(String username) {
+        List<ToDoListModel> lista = new ArrayList<>(userService.getUser(username).getToDoLists());
+        return lista;
     }
 }
