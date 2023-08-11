@@ -28,8 +28,22 @@
         <td><span th:text="${l.taskName}">Task name</span></td>
         <td><span th:text="${l.taskEndTime}">Task end time</span></td>
         <td><span th:text="${l.done}">Task end time</span></td>
-        <td><a th:href="@{/task/delete/{id}(id=${l.id})}">DELETE</a></td>
+        <td>
+            <button th:attr="onclick='deleteItem(' + ${l.id} + ')'">Delete</button>
+        </td>
         <td><a th:href="@{/task/finish/{id}(id=${l.id})}">DONE</a></td>
+        <script>
+            function deleteItem(id) {
+                if (confirm("Are you sure you want to delete this item?")) {
+                    fetch(`/task/delete/${id}`, {
+                        method: "DELETE"
+                    })
+                        .then(response => {
+                            window.location.href = "/list/get";
+                        })
+                }
+            }
+        </script>
     </tr>
     </tbody>
 </table>
