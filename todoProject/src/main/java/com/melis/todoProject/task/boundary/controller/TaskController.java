@@ -45,7 +45,7 @@ public class TaskController {
         return "redirect:/list/get";
     }
 
-    @GetMapping("/task/finish/{id}")
+    @PostMapping("/task/finish/{id}")
     public String setTaskToDone(@PathVariable(name = "id") Integer id, Authentication authentication) {
         TaskModel task = taskService.getTaskById(id);
         if (task == null || taskService.checkIfUserCanAcces(authentication.getName(), id))
