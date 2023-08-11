@@ -5,6 +5,7 @@ import com.melis.todoProject.todolist.control.repository.ToDoListRepository;
 import com.melis.todoProject.todolist.entity.model.ToDoListModel;
 import com.melis.todoProject.user.control.service.UserService;
 import com.melis.todoProject.user.control.service.UserServiceImp;
+import com.melis.todoProject.user.entity.model.UserModel;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class ToDoListServiceImpl implements ToDoListService {
         this.userService = userService;
     }
 
+    @Transactional
     @Override
     public void addNewListToLoggedUser(ToDoListModel toDoListModel, String username) {
         toDoListRepository.save(toDoListModel);
@@ -58,11 +60,32 @@ public class ToDoListServiceImpl implements ToDoListService {
     @Transactional
     @Override
     public ToDoListModel getListById(Integer id) {
-        Optional<ToDoListModel> fetced = toDoListRepository.findById(id);
+        Optional<ToDoListModel> fetched = toDoListRepository.findById(id);
         ToDoListModel data = new ToDoListModel();
-        for (TaskModel task : fetced.get().getTask()) {
+        if (fetched.isEmpty()) return null;
+        data.setId(fetched.get().getId());
+        for (TaskModel task : fetched.get().getTask()) {
             data.getTask().add(task);
         }
         return data;
+    }
+
+    @Transactional
+    @Override
+    public boolean checkIfUserCanAcces(String username, Integer listId) {
+        UserModel user = userService.getUser(username);
+        for (ToDoListModel list : user.getToDoLists()) {
+            if (list.getId().equals(listId)) return false;
+        }
+        return true;
+    }
+
+    @Transactional
+    @Override
+    public void deleteList(Integer listId, String username) {
+        UserModel user = userService.getUser(username);
+        user.getToDoLists().removeIf(item -> item.getId().equals(listId));
+        Optional<ToDoListModel> list = toDoListRepository.findById(listId);
+        toDoListRepository.deleteById(listId);
     }
 }

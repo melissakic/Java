@@ -44,7 +44,7 @@ public class TaskController {
     public String addTask(@ModelAttribute TaskAndToDoListsDTO task) {
         task.getTaskModel().setTaskEndTime(taskService.convertStringToTimestamp(task.getSelectedEndTime()));
         taskService.addTask(task);
-        return "redirect:/task/add";
+        return "redirect:/list/get";
     }
 
 }

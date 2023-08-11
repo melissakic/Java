@@ -45,9 +45,20 @@ public class ToDoListController {
     }
 
     @GetMapping("list/get/{id}")
-    public String getListById(@PathVariable(value = "id") Integer id, Model model) {
+    public String getListById(@PathVariable(value = "id") Integer id, Model model, Authentication authentication) {
         ToDoListModel list = toDoListService.getListById(id);
+        if (list == null || toDoListService.checkIfUserCanAcces(authentication.getName(), list.getId()))
+            return "redirect:/list/get";
         model.addAttribute("list", list.getTask());
         return "getOneList";
+    }
+
+    @GetMapping("list/delete/{id}")
+    public String deleteList(@PathVariable(value = "id") Integer id, Model model, Authentication authentication) {
+        ToDoListModel list = toDoListService.getListById(id);
+        if (list == null || toDoListService.checkIfUserCanAcces(authentication.getName(), list.getId()))
+            return "redirect:/list/get";
+        toDoListService.deleteList(id, authentication.getName());
+        return "redirect:/list/get";
     }
 }

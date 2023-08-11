@@ -28,6 +28,6 @@ public class UserModel {
     @NotNull
     @NotEmpty(message = "Password cannot be empty")
     private String password;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ToDoListModel> toDoLists = new ArrayList<>();
 }

@@ -15,4 +15,8 @@ public interface ToDoListService {
 
     public ToDoListModel getListById(Integer id);
 
+    public boolean checkIfUserCanAcces(String username, Integer listId);
+
+    public void deleteList(Integer listId, String username);
+
 }

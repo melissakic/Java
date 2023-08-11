@@ -20,7 +20,7 @@ public class ToDoListModel {
     private Integer id;
     private String listName;
     private String listDescription;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TaskModel> task = new ArrayList<>();
 
 
