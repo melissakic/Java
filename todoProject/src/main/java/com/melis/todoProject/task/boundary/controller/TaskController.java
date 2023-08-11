@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -44,6 +45,24 @@ public class TaskController {
     public String addTask(@ModelAttribute TaskAndToDoListsDTO task) {
         task.getTaskModel().setTaskEndTime(taskService.convertStringToTimestamp(task.getSelectedEndTime()));
         taskService.addTask(task);
+        return "redirect:/list/get";
+    }
+
+    @GetMapping("/task/finish/{id}")
+    public String setTaskToDone(@PathVariable(name = "id") Integer id, Authentication authentication) {
+        TaskModel task = taskService.getTaskById(id);
+        if (task == null || taskService.checkIfUserCanAcces(authentication.getName(), id))
+            return "redirect:/list/get";
+        taskService.setTaskToDone(id);
+        return "redirect:/list/get";
+    }
+
+    @GetMapping("task/delete/{id}")
+    public String deleteTask(@PathVariable Integer id, Authentication authentication) {
+        TaskModel task = taskService.getTaskById(id);
+        if (task == null || taskService.checkIfUserCanAcces(authentication.getName(), id))
+            return "redirect:/list/get";
+        taskService.deleteTask(id, authentication.getName());
         return "redirect:/list/get";
     }
 

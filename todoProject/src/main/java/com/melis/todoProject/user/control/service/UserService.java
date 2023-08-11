@@ -11,4 +11,6 @@ public interface UserService {
 
     public UserModel getUser(String username);
 
+    public void saveUser(UserModel user);
+
 }

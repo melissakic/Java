@@ -51,9 +51,9 @@ public class ToDoListController {
     }
 
     @DeleteMapping("list/delete/{id}")
-    public String deleteList(@PathVariable(value = "id") Integer id, Model model, Authentication authentication) {
+    public String deleteList(@PathVariable(value = "id") Integer id, Authentication authentication) {
         ToDoListModel list = toDoListService.getListById(id);
-        if (list == null || toDoListService.checkIfUserCanAcces(authentication.getName(), list.getId()))
+        if (list == null || toDoListService.checkIfUserCanAcces(authentication.getName(), id))
             return "redirect:/list/get";
         toDoListService.deleteList(id, authentication.getName());
         return "redirect:/list/get";
