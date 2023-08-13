@@ -17,6 +17,7 @@
         <th>Task done</th>
         <th>Delete task</th>
         <th>Finish task</th>
+        <th>Edit task</th>
     </tr>
     </thead>
     <tbody>
@@ -36,6 +37,9 @@
             <!--                <button type="submit">DONE</button>-->
             <!--            </form>-->
             <a th:href="@{/task/finish/{id}(id=${l.id})}">Finish</a>
+        </td>
+        <td>
+            <a th:href="@{/task/edit/{id}(id=${l.id})}">Edit</a>
         </td>
 
         <script>

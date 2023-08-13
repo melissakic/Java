@@ -49,7 +49,7 @@ public class TaskServiceImp implements TaskService {
 
     @Transactional
     @Override
-    public boolean checkIfUserCanAcces(String username, Integer taskId) {
+    public boolean checkIfUserCanAccess(String username, Integer taskId) {
         UserModel user = userService.getUser(username);
         for (ToDoListModel list : user.getToDoLists()) {
             for (TaskModel task : list.getTask()) {
@@ -89,5 +89,10 @@ public class TaskServiceImp implements TaskService {
         ToDoListModel fetched = toDoListService.getListByName(list.getListName());
         fetched.getTask().removeIf(item -> item.getId().equals(taskId));
         taskRepository.deleteById(taskId);
+    }
+
+    @Override
+    public void editTask(TaskModel task) {
+        taskRepository.save(task);
     }
 }

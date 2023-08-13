@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Edit existing task</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1 th:align="center">Edit task</h1>
+<h3 th:align="center"><a th:href="@{/list/get}">Home</a></h3>
+<form th:align="center" action="#" th:action="@{/task/edit/{id}(id=${task.id})}" th:object="${task}" method="POST">
+    <p>Task name: <label>
+        <input type="text" th:field="${task.taskName}"/>
+    </label></p>
+    <p>Status:
+        <label>
+            <select th:field="${task.done}">
+                <option value=false>In progress</option>
+                <option value=true>Done</option>
+            </select>
+        </label>
+    </p>
+    <p>Endtime(yyyy-mm-dd):
+        <label>
+            <input type="text" th:field="${task.taskEndTime}"/>
+        </label>
+    </p>
+    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+</form>
+</body>
+</html>

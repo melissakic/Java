@@ -17,5 +17,7 @@ public interface TaskService {
 
     public void deleteTask(Integer taskId, String username);
 
-    public boolean checkIfUserCanAcces(String username, Integer taskId);
+    public boolean checkIfUserCanAccess(String username, Integer taskId);
+
+    public void editTask(TaskModel task);
 }
