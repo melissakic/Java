@@ -45,8 +45,17 @@ public class TaskController {
         return "redirect:/list/get";
     }
 
-    @PostMapping("/task/finish/{id}")
-    public String setTaskToDone(@PathVariable(name = "id") Integer id, Authentication authentication) {
+//    @PostMapping("/task/finish/{id}")
+//    public String setTaskToDone(@PathVariable(name = "id") Integer id, Authentication authentication) {
+//        TaskModel task = taskService.getTaskById(id);
+//        if (task == null || taskService.checkIfUserCanAcces(authentication.getName(), id))
+//            return "redirect:/list/get";
+//        taskService.setTaskToDone(id);
+//        return "redirect:/list/get";
+//    }
+
+    @GetMapping("task/finish/{id}")
+    public String addTask(@PathVariable(name = "id") Integer id, Authentication authentication) {
         TaskModel task = taskService.getTaskById(id);
         if (task == null || taskService.checkIfUserCanAcces(authentication.getName(), id))
             return "redirect:/list/get";

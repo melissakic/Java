@@ -32,9 +32,10 @@
             <button th:attr="onclick='deleteItem(' + ${l.id} + ')'">Delete</button>
         </td>
         <td>
-            <form th:action="@{/task/finish/{id}(id=${l.id})}" method="post">
-                <button type="submit">DONE</button>
-            </form>
+            <!--            <form th:action="@{/task/finish/{id}(id=${l.id})}" method="post">-->
+            <!--                <button type="submit">DONE</button>-->
+            <!--            </form>-->
+            <a th:href="@{/task/finish/{id}(id=${l.id})}">Finish</a>
         </td>
 
         <script>
