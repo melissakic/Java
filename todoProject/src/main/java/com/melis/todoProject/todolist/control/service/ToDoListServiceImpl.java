@@ -30,7 +30,7 @@ public class ToDoListServiceImpl implements ToDoListService {
     @Override
     public void addNewListToLoggedUser(ToDoListModel toDoListModel, String username) {
         toDoListRepository.save(toDoListModel);
-        userService.addListToUser(toDoListModel, username);
+        addListToUser(toDoListModel, username);
     }
 
     @Transactional
@@ -38,9 +38,7 @@ public class ToDoListServiceImpl implements ToDoListService {
     public List<String> getListNamesFromUser(String username) {
         List<String> list = new ArrayList<>();
         List<ToDoListModel> retrievedLists = userService.getUser(username).getToDoLists();
-        retrievedLists.forEach(item -> {
-            list.add(item.getListName());
-        });
+        retrievedLists.forEach(item -> list.add(item.getListName()));
         return list;
     }
 
@@ -53,8 +51,7 @@ public class ToDoListServiceImpl implements ToDoListService {
     @Transactional
     @Override
     public List<ToDoListModel> getListFromUser(String username) {
-        List<ToDoListModel> lista = new ArrayList<>(userService.getUser(username).getToDoLists());
-        return lista;
+        return new ArrayList<>(userService.getUser(username).getToDoLists());
     }
 
     @Transactional
@@ -72,7 +69,7 @@ public class ToDoListServiceImpl implements ToDoListService {
 
     @Transactional
     @Override
-    public boolean checkIfUserCanAcces(String username, Integer listId) {
+    public boolean checkToDoListAuthorisation(String username, Integer listId) {
         UserModel user = userService.getUser(username);
         for (ToDoListModel list : user.getToDoLists()) {
             if (list.getId().equals(listId)) return false;
@@ -80,12 +77,18 @@ public class ToDoListServiceImpl implements ToDoListService {
         return true;
     }
 
+    @Override
+    @Transactional
+    public void addListToUser(ToDoListModel toDoListModel, String username) {
+        UserModel user = userService.getUser(username);
+        user.getToDoLists().add(toDoListModel);
+    }
+
     @Transactional
     @Override
     public void deleteList(Integer listId, String username) {
         UserModel user = userService.getUser(username);
         user.getToDoLists().removeIf(item -> item.getId().equals(listId));
-        Optional<ToDoListModel> list = toDoListRepository.findById(listId);
         toDoListRepository.deleteById(listId);
     }
 }

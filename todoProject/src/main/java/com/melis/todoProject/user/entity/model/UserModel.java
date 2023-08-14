@@ -4,7 +4,6 @@ package com.melis.todoProject.user.entity.model;
 import com.melis.todoProject.todolist.entity.model.ToDoListModel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -22,10 +21,8 @@ public class UserModel {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private Integer id;
-    @NotNull
     @NotEmpty(message = "Username cannot be empty")
     private String username;
-    @NotNull
     @NotEmpty(message = "Password cannot be empty")
     private String password;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

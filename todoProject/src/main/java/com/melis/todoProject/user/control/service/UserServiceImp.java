@@ -1,7 +1,6 @@
 package com.melis.todoProject.user.control.service;
 
 
-import com.melis.todoProject.todolist.entity.model.ToDoListModel;
 import com.melis.todoProject.user.control.repository.UserRepository;
 import com.melis.todoProject.user.entity.model.UserModel;
 import jakarta.transaction.Transactional;
@@ -29,20 +28,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     @Transactional
-    public void addListToUser(ToDoListModel toDoListModel, String username) {
-        UserModel user = userRepository.findByUsername(username);
-        user.getToDoLists().add(toDoListModel);
-    }
-
-    @Override
-    @Transactional
     public UserModel getUser(String username) {
-        UserModel user = userRepository.findByUsername(username);
-        return user;
-    }
-
-    @Override
-    public void saveUser(UserModel user) {
-        userRepository.save(user);
+        return userRepository.findByUsername(username);
     }
 }

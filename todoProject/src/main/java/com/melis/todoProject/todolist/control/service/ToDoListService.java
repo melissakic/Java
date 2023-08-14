@@ -5,18 +5,19 @@ import com.melis.todoProject.todolist.entity.model.ToDoListModel;
 import java.util.List;
 
 public interface ToDoListService {
-    public void addNewListToLoggedUser(ToDoListModel toDoListModel, String username);
+    void addNewListToLoggedUser(ToDoListModel toDoListModel, String username);
 
-    public List<String> getListNamesFromUser(String username);
+    List<String> getListNamesFromUser(String username);
 
-    public List<ToDoListModel> getListFromUser(String username);
+    List<ToDoListModel> getListFromUser(String username);
 
-    public ToDoListModel getListByName(String name);
+    void addListToUser(ToDoListModel toDoListModel, String username);
 
-    public ToDoListModel getListById(Integer id);
+    ToDoListModel getListByName(String name);
 
-    public boolean checkIfUserCanAcces(String username, Integer listId);
+    ToDoListModel getListById(Integer id);
 
-    public void deleteList(Integer listId, String username);
+    boolean checkToDoListAuthorisation(String username, Integer listId);
 
+    void deleteList(Integer listId, String username);
 }

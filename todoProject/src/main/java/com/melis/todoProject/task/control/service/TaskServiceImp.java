@@ -14,7 +14,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.Optional;
 
 @Service
@@ -22,7 +21,6 @@ public class TaskServiceImp implements TaskService {
 
     private final TaskRepository taskRepository;
     private final ToDoListService toDoListService;
-
     private final UserService userService;
 
     @Autowired
@@ -40,16 +38,9 @@ public class TaskServiceImp implements TaskService {
         model.getTask().add(task.getTaskModel());
     }
 
-    @Override
-    public Timestamp convertStringToTimestamp(String time) {
-        time = time + " 00:00:00.0";
-        Timestamp timestamp = Timestamp.valueOf(time);
-        return timestamp;
-    }
-
     @Transactional
     @Override
-    public boolean checkIfUserCanAccess(String username, Integer taskId) {
+    public boolean checkTaskAuthorisation(String username, Integer taskId) {
         UserModel user = userService.getUser(username);
         for (ToDoListModel list : user.getToDoLists()) {
             for (TaskModel task : list.getTask()) {
@@ -69,7 +60,7 @@ public class TaskServiceImp implements TaskService {
     @Override
     public void setTaskToDone(Integer taskId) {
         Optional<TaskModel> task = taskRepository.findById(taskId);
-        task.get().setDone(true);
+        task.ifPresent(taskModel -> taskModel.setDone(true));
         taskRepository.save(task.get());
     }
 
