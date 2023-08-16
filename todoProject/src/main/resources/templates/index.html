@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Add new todo list</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+</head>
+<body th:align="center">
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+    enabled. Please enable
+    Javascript and reload this page!</h2></noscript>
+<div>
+    <div>
+        <div>
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">WebSocket connection:</label>
+                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
+                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+                    </button>
+                </div>
+            </form>
+            <br/>
+        </div>
+        <div>
+            <form id="todoForm">
+                <div>
+                    <label for="listName">List Name:</label>
+                    <input type="text" id="listName" name="listName"/>
+                </div>
+                <br/>
+                <div>
+                    <label for="listDescription">List Description:</label>
+                    <input type="text" id="listDescription" name="listDescription"/>
+                </div>
+                <br/>
+                <button id="send" type="button">Create To-Do List</button>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div th:align="center">
+        <div>
+            <table id="conversation">
+                <thead>
+                <tr>
+                    <th>To do lists</th>
+                </tr>
+                </thead>
+                <tbody id="greetings">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    const stompClient = new StompJs.Client({
+        brokerURL: 'ws://localhost:8081/gs-guide-websocket'
+    });
+
+    stompClient.onConnect = (frame) => {
+        setConnected(true);
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/greetings', (greeting) => {
+            const message = JSON.parse(greeting.body);
+            const todoList = message.listName + ": " + message.listDescription;
+            showList(todoList);
+        });
+    };
+
+    stompClient.onWebSocketError = (error) => {
+        console.error('Error with websocket', error);
+    };
+
+    stompClient.onStompError = (frame) => {
+        console.error('Broker reported error: ' + frame.headers['message']);
+        console.error('Additional details: ' + frame.body);
+    };
+
+    function setConnected(connected) {
+        $("#connect").prop("disabled", connected);
+        $("#disconnect").prop("disabled", !connected);
+        if (connected) {
+            $("#conversation").show();
+        } else {
+            $("#conversation").hide();
+        }
+        $("#greetings").html("");
+    }
+
+    function connect() {
+        stompClient.activate();
+    }
+
+    function disconnect() {
+        stompClient.deactivate();
+        setConnected(false);
+        console.log("Disconnected");
+    }
+
+    function sendName() {
+        stompClient.publish({
+            destination: "/app/hello",
+            body: JSON.stringify({'listName': $("#listName").val(), 'listDescription': $("#listDescription").val()})
+        });
+    }
+
+    function showList(message) {
+        $("#greetings").append("<tr><td>" + message + "</td></tr>");
+    }
+
+    $(function () {
+        $("form").on('submit', (e) => e.preventDefault());
+        $("#connect").click(() => connect());
+        $("#disconnect").click(() => disconnect());
+        $("#send").click(() => sendName());
+    });
+
+
+</script>
+</body>
+</html>

@@ -22,10 +22,10 @@ public class TaskPostController {
     }
 
     @PostMapping("/task/add")
-    public String addTask(@ModelAttribute TaskAndToDoListsDTO task) {
+    public void addTask(@ModelAttribute TaskAndToDoListsDTO task) {
         task.getTaskModel().setTaskEndTime(StringToTimestampParser.convertStringToTimestamp(task.getSelectedEndTime()));
         taskService.addTask(task);
-        return "redirect:/list/get";
+//        return "redirect:/list/get";
     }
 
     @PostMapping("/task/edit/{id}")

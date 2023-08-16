@@ -1,9 +1,9 @@
 package com.melis.todoProject.test;
 
+import com.melis.todoProject.todolist.entity.dto.SimpleToDoListModel;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.util.HtmlUtils;
 
 @Controller
 public class GreetingController {
@@ -11,8 +11,8 @@ public class GreetingController {
 
     @MessageMapping("/hello")
     @SendTo("/topic/greetings")
-    public Greeting greeting(HelloMessage message) throws Exception {
-        return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
+    public SimpleToDoListModel greeting(SimpleToDoListModel toDoList) throws Exception {
+        return toDoList;
     }
 
 }
