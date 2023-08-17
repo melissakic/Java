@@ -16,4 +16,6 @@ public interface TaskService {
     public boolean checkTaskAuthorisation(String username, Integer taskId);
 
     public void editTask(TaskModel task);
+
+    public void scheduleDeletionFinishedTasks();
 }

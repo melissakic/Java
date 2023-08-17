@@ -15,17 +15,17 @@
             <h1>Add new list</h1>
             <h3><a th:href="@{/list/get}">Home</a></h3>
         </div>
-        <div>
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="connect">WebSocket connection:</label>
-                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-                    </button>
-                </div>
-            </form>
-            <br/>
-        </div>
+        <!--        <div>-->
+        <!--            <form class="form-inline">-->
+        <!--                <div class="form-group">-->
+        <!--                    <label for="connect">WebSocket connection:</label>-->
+        <!--                    <button id="connect" class="btn btn-default" type="submit">Connect</button>-->
+        <!--                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect-->
+        <!--                    </button>-->
+        <!--                </div>-->
+        <!--            </form>-->
+        <!--            <br/>-->
+        <!--        </div>-->
         <div>
             <form id="todoForm">
                 <div>
@@ -66,13 +66,13 @@
 
 <script>
     const stompClient = new StompJs.Client({
-        brokerURL: 'ws://localhost:8081/gs-guide-websocket'
+        brokerURL: 'ws://localhost:8081/websocket'
     });
 
     stompClient.onConnect = (frame) => {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/greetings', (greeting) => {
+        stompClient.subscribe('/list/message', (greeting) => {
             const message = JSON.parse(greeting.body);
             const todoList = message.listName + ": " + message.listDescription;
             showList(todoList);
@@ -119,13 +119,13 @@
         };
 
         stompClient.publish({
-            destination: "/app/hello",
+            destination: "/app/add",
             body: JSON.stringify(requestData)
         });
 
         $.ajax({
             type: 'POST',
-            url: '/list/add', // Adjust this URL as needed
+            url: '/list/add',
             data: JSON.stringify(requestData),
             contentType: 'application/json',
             success: function (response) {
@@ -136,20 +136,20 @@
     }
 
     function showList(message) {
-        const parts = message.split(":"); // Split the message into parts
+        const parts = message.split(":");
         const listName = parts[0];
         const listDescription = parts[1];
 
-        // Create a new table row with two cells
         const newRow = $("<tr>")
-            .append($("<td>").text(listName)) // Create a new cell with listName
-            .append($("<td>").text(listDescription)); // Create a new cell with listDescription
+            .append($("<td>").text(listName))
+            .append($("<td>").text(listDescription));
 
-        $("#greetings").append(newRow); // Append the row to the table
+        $("#greetings").append(newRow);
     }
 
     $(function () {
         $("form").on('submit', (e) => e.preventDefault());
+        connect();
         $("#connect").click(() => connect());
         $("#disconnect").click(() => disconnect());
         $("#send").click(() => sendName());

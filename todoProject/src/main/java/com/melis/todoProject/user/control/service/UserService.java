@@ -7,4 +7,6 @@ public interface UserService {
     void registerUser(UserModel user);
 
     UserModel getUser(String username);
+
+    void saveUser(UserModel user);
 }

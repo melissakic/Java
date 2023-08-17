@@ -8,8 +8,8 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class ToDoListMessageController {
 
-    @MessageMapping("/hello")
-    @SendTo("/topic/greetings")
+    @MessageMapping("/add")
+    @SendTo("/list/message")
     public SimpleToDoListModel greeting(SimpleToDoListModel message) throws Exception {
         Thread.sleep(500); // simulated delay
         return message;

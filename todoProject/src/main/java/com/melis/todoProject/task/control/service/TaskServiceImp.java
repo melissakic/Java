@@ -11,17 +11,26 @@ import com.melis.todoProject.user.control.service.UserService;
 import com.melis.todoProject.user.control.service.UserServiceImp;
 import com.melis.todoProject.user.entity.model.UserModel;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.user.SimpUser;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
+@Slf4j
 public class TaskServiceImp implements TaskService {
 
+    @Autowired
+    private SimpUserRegistry userRegistry;
     private final TaskRepository taskRepository;
     private final ToDoListService toDoListService;
     private final UserService userService;
+
 
     @Autowired
     public TaskServiceImp(TaskRepository taskRepository, ToDoListServiceImpl toDoListService, UserServiceImp userService) {
@@ -30,7 +39,6 @@ public class TaskServiceImp implements TaskService {
         this.userService = userService;
     }
 
-    @Transactional
     @Override
     public void addTask(TaskAndToDoListsDTO task) {
         taskRepository.save(task.getTaskModel());
@@ -38,7 +46,6 @@ public class TaskServiceImp implements TaskService {
         model.getTask().add(task.getTaskModel());
     }
 
-    @Transactional
     @Override
     public boolean checkTaskAuthorisation(String username, Integer taskId) {
         UserModel user = userService.getUser(username);
@@ -50,7 +57,6 @@ public class TaskServiceImp implements TaskService {
         return true;
     }
 
-    @Transactional
     @Override
     public TaskModel getTaskById(Integer id) {
         Optional<TaskModel> task = taskRepository.findById(id);
@@ -64,7 +70,6 @@ public class TaskServiceImp implements TaskService {
         taskRepository.save(task.get());
     }
 
-    @Transactional
     @Override
     public void deleteTask(Integer taskId, String username) {
         UserModel user = userService.getUser(username);
@@ -85,5 +90,23 @@ public class TaskServiceImp implements TaskService {
     @Override
     public void editTask(TaskModel task) {
         taskRepository.save(task);
+    }
+
+
+    @Override
+//    @Scheduled(fixedDelay = 10000)
+    public void scheduleDeletionFinishedTasks() {
+        if (userRegistry != null) {
+            List<String> users = userRegistry.getUsers().stream()
+                    .map(SimpUser::getName)
+                    .toList();
+            if (users.size() > 0) {
+                UserModel user = userService.getUser(users.get(0));
+                user.getToDoLists().forEach(item -> {
+                    item.getTask().removeIf(TaskModel::isDone);
+                });
+                userService.saveUser(user);
+            }
+        }
     }
 }
