@@ -2,6 +2,7 @@ package com.melis.todoProject.todolist.control.service;
 
 import com.melis.todoProject.task.entity.model.TaskModel;
 import com.melis.todoProject.todolist.control.repository.ToDoListRepository;
+import com.melis.todoProject.todolist.entity.dto.SimpleToDoListModel;
 import com.melis.todoProject.todolist.entity.model.ToDoListModel;
 import com.melis.todoProject.user.control.service.UserService;
 import com.melis.todoProject.user.control.service.UserServiceImp;
@@ -90,5 +91,16 @@ public class ToDoListServiceImpl implements ToDoListService {
         UserModel user = userService.getUser(username);
         user.getToDoLists().removeIf(item -> item.getId().equals(listId));
         toDoListRepository.deleteById(listId);
+    }
+
+    @Transactional
+    @Override
+    public List<SimpleToDoListModel> getSimpleListsFromUser(String username) {
+        List<ToDoListModel> lists = getListFromUser(username);
+        List<SimpleToDoListModel> simpleLists = new ArrayList<>();
+        for (ToDoListModel list : lists) {
+            simpleLists.add(new SimpleToDoListModel(list.getListName(), list.getListDescription()));
+        }
+        return simpleLists;
     }
 }

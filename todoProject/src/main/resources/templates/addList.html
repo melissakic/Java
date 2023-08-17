@@ -1,16 +1,161 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>Add new to do list</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Add new todo list</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 </head>
-<body>
-<h1 th:align="center">Add new list</h1>
-<h3 th:align="center"><a th:href="@{/list/get}">Home</a></h3>
-<form th:align="center" action="#" th:action="@{/list/add}" th:object="${todoList}" method="POST">
-    <p>List name: <input type="text" th:field="*{listName}"/></p>
-    <p>List description: <input type="text" th:field="*{listDescription}"/></p>
-    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
-</form>
+<body th:align="center">
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+    enabled. Please enable
+    Javascript and reload this page!</h2></noscript>
+<div>
+    <div>
+        <div>
+            <h1>Add new list</h1>
+            <h3><a th:href="@{/list/get}">Home</a></h3>
+        </div>
+        <div>
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">WebSocket connection:</label>
+                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
+                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+                    </button>
+                </div>
+            </form>
+            <br/>
+        </div>
+        <div>
+            <form id="todoForm">
+                <div>
+                    <label for="listName">List Name:</label>
+                    <input type="text" id="listName" name="listName"/>
+                </div>
+                <br/>
+                <div>
+                    <label for="listDescription">List Description:</label>
+                    <input type="text" id="listDescription" name="listDescription"/>
+                </div>
+                <br/>
+                <button id="send" type="button">Create To-Do List</button>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div th:align="center">
+        <div>
+            <h3>To do lists</h3>
+            <table id="conversation">
+                <thead>
+                <tr>
+                    <td>List name</td>
+                    <td>List description</td>
+                </tr>
+                <tr th:each="list :${fetchedLists}">
+                    <td><span th:text="${list.listName}">List name</span></td>
+                    <td><span th:text="${list.listDescription}">List description</span></td>
+                </tr>
+                </thead>
+                <tbody id="greetings">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    const stompClient = new StompJs.Client({
+        brokerURL: 'ws://localhost:8081/gs-guide-websocket'
+    });
+
+    stompClient.onConnect = (frame) => {
+        setConnected(true);
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/greetings', (greeting) => {
+            const message = JSON.parse(greeting.body);
+            const todoList = message.listName + ": " + message.listDescription;
+            showList(todoList);
+        });
+    };
+
+    stompClient.onWebSocketError = (error) => {
+        console.error('Error with websocket', error);
+    };
+
+    stompClient.onStompError = (frame) => {
+        console.error('Broker reported error: ' + frame.headers['message']);
+        console.error('Additional details: ' + frame.body);
+    };
+
+    function setConnected(connected) {
+        $("#connect").prop("disabled", connected);
+        $("#disconnect").prop("disabled", !connected);
+        if (connected) {
+            $("#conversation").show();
+        } else {
+            $("#conversation").hide();
+        }
+        $("#greetings").html("");
+    }
+
+    function connect() {
+        stompClient.activate();
+    }
+
+    function disconnect() {
+        stompClient.deactivate();
+        setConnected(false);
+        console.log("Disconnected");
+    }
+
+    function sendName() {
+        const listName = $("#listName").val();
+        const listDescription = $("#listDescription").val();
+
+        const requestData = {
+            listName: listName,
+            listDescription: listDescription
+        };
+
+        stompClient.publish({
+            destination: "/app/hello",
+            body: JSON.stringify(requestData)
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: '/list/add', // Adjust this URL as needed
+            data: JSON.stringify(requestData),
+            contentType: 'application/json',
+            success: function (response) {
+            },
+            error: function (error) {
+            }
+        });
+    }
+
+    function showList(message) {
+        const parts = message.split(":"); // Split the message into parts
+        const listName = parts[0];
+        const listDescription = parts[1];
+
+        // Create a new table row with two cells
+        const newRow = $("<tr>")
+            .append($("<td>").text(listName)) // Create a new cell with listName
+            .append($("<td>").text(listDescription)); // Create a new cell with listDescription
+
+        $("#greetings").append(newRow); // Append the row to the table
+    }
+
+    $(function () {
+        $("form").on('submit', (e) => e.preventDefault());
+        $("#connect").click(() => connect());
+        $("#disconnect").click(() => disconnect());
+        $("#send").click(() => sendName());
+    });
+
+
+</script>
 </body>
 </html>

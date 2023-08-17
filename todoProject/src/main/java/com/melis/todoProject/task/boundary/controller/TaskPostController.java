@@ -22,10 +22,10 @@ public class TaskPostController {
     }
 
     @PostMapping("/task/add")
-    public void addTask(@ModelAttribute TaskAndToDoListsDTO task) {
+    public String addTask(@ModelAttribute TaskAndToDoListsDTO task) {
         task.getTaskModel().setTaskEndTime(StringToTimestampParser.convertStringToTimestamp(task.getSelectedEndTime()));
         taskService.addTask(task);
-//        return "redirect:/list/get";
+        return "redirect:/list/get";
     }
 
     @PostMapping("/task/edit/{id}")
@@ -36,12 +36,4 @@ public class TaskPostController {
         taskService.editTask(taskModel);
         return "redirect:/list/get";
     }
-//    @PostMapping("/task/finish/{id}")
-//    public String setTaskToDone(@PathVariable(name = "id") Integer id, Authentication authentication) {
-//        TaskModel task = taskService.getTaskById(id);
-//        if (task == null || taskService.checkIfUserCanAcces(authentication.getName(), id))
-//            return "redirect:/list/get";
-//        taskService.setTaskToDone(id);
-//        return "redirect:/list/get";
-//    }
 }

@@ -38,7 +38,8 @@ public class ToDoListGetController {
     }
 
     @GetMapping("list/add")
-    public String formNewList(Model model) {
+    public String formNewList(Model model, Authentication authentication) {
+        model.addAttribute("fetchedLists", toDoListService.getSimpleListsFromUser(authentication.getName()));
         model.addAttribute("todoList", new ToDoListModel());
         return "addList";
     }

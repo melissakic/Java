@@ -6,8 +6,9 @@ import com.melis.todoProject.todolist.entity.model.ToDoListModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ToDoListPostController {
@@ -20,10 +21,10 @@ public class ToDoListPostController {
     }
 
 
+    @ResponseBody
     @PostMapping("/list/add")
-    public String addNewList(@ModelAttribute ToDoListModel toDoList, Authentication authentication) {
+    public void addNewList(@RequestBody ToDoListModel toDoList, Authentication authentication) {
         toDoListService.addNewListToLoggedUser(toDoList, authentication.getName());
-        return "redirect:/list/get";
     }
 
 
