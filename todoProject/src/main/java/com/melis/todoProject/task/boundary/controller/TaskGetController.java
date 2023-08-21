@@ -44,12 +44,21 @@ public class TaskGetController {
     }
 
     @GetMapping("task/finish/{id}")
-    public String addTask(@PathVariable(name = "id") Integer id, Authentication authentication) {
+    public String finishTask(@PathVariable(name = "id") Integer id, Authentication authentication) {
         TaskModel task = taskService.getTaskById(id);
         if (task == null || taskService.checkTaskAuthorisation(authentication.getName(), id))
             return "redirect:/task/unfinished";
         taskService.setTaskToDone(id);
         return "redirect:/task/unfinished";
+    }
+
+    @GetMapping("task/changeStatus/{id}")
+    public String changeStatus(@PathVariable(name = "id") Integer id, Authentication authentication) {
+        TaskModel task = taskService.getTaskById(id);
+        if (task != null || !taskService.checkTaskAuthorisation(authentication.getName(), id)) {
+            taskService.changeStatus(id);
+        }
+        return "redirect:/list/get";
     }
 
     @GetMapping("/task/unfinished")

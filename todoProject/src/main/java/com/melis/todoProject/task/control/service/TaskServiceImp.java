@@ -98,6 +98,11 @@ public class TaskServiceImp implements TaskService {
         taskRepository.save(task);
     }
 
+    @Override
+    public void changeStatus(Integer taskId) {
+        Optional<TaskModel> task = taskRepository.findById(taskId);
+        task.ifPresent(taskModel -> taskModel.setDone(!taskModel.isDone()));
+    }
 
     @Override
     @Scheduled(fixedDelay = 2000)

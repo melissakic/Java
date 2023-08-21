@@ -14,10 +14,8 @@
         <th>Task id</th>
         <th>Task name</th>
         <th>Task end time</th>
-        <th>Task done</th>
-        <th>Delete task</th>
-        <th>Finish task</th>
-        <th>Edit task</th>
+        <th>Finished</th>
+        <th>Change status</th>
     </tr>
     </thead>
     <tbody>
@@ -27,30 +25,13 @@
     <tr th:each="l : ${list}">
         <td><span th:text="${l.id}">Task id</span></td>
         <td><span th:text="${l.taskName}">Task name</span></td>
-        <td><span th:text="${l.taskEndTime}">Task end time</span></td>
-        <td><span th:text="${l.done}">Task end time</span></td>
         <td>
-            <button th:attr="onclick='deleteItem(' + ${l.id} + ')'">Delete</button>
+            <p th:text="${#dates.format(l.taskEndTime, 'dd/MM/yyyy')}"></p>
         </td>
+        <td><span th:text="${l.done}">Done</span></td>
         <td>
-            <a th:href="@{/task/finish/{id}(id=${l.id})}">Finish</a>
+            <a th:href="@{/task/changeStatus/{id}(id=${l.id})}">Change</a>
         </td>
-        <td>
-            <a th:href="@{/task/edit/{id}(id=${l.id})}">Edit</a>
-        </td>
-
-        <script>
-            function deleteItem(id) {
-                if (confirm("Are you sure you want to delete this item?")) {
-                    fetch(`/task/delete/${id}`, {
-                        method: "DELETE"
-                    })
-                        .then(response => {
-                            window.location.href = "/list/get";
-                        })
-                }
-            }
-        </script>
     </tr>
     </tbody>
 </table>

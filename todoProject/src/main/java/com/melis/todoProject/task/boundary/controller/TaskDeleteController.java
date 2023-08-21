@@ -22,8 +22,8 @@ public class TaskDeleteController {
     public String deleteTask(@PathVariable Integer id, Authentication authentication) {
         TaskModel task = taskService.getTaskById(id);
         if (task == null || taskService.checkTaskAuthorisation(authentication.getName(), id))
-            return "redirect:/list/get";
+            return "redirect:/task/unfinished";
         taskService.deleteTask(id, authentication.getName());
-        return "redirect:/list/get";
+        return "redirect:/task/unfinished";
     }
 }

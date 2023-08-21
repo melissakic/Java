@@ -17,5 +17,7 @@ public interface TaskService {
 
     public void editTask(TaskModel task);
 
+    public void changeStatus(Integer taskId);
+
     public void scheduleDeletionFinishedTasks();
 }

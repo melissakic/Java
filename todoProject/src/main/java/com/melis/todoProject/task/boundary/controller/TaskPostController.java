@@ -25,7 +25,7 @@ public class TaskPostController {
     public String addTask(@ModelAttribute TaskAndToDoListsDTO task) {
         task.getTaskModel().setTaskEndTime(StringToTimestampParser.convertStringToTimestamp(task.getSelectedEndTime()));
         taskService.addTask(task);
-        return "redirect:/task/unfinished";
+        return "redirect:/list/get";
     }
 
     @PostMapping("/task/edit/{id}")
