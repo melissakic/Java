@@ -19,5 +19,7 @@ public interface TaskService {
 
     public void changeStatus(Integer taskId);
 
-    public void scheduleDeletionFinishedTasks();
+    public void scheduleFetchingUnfinishedTasks();
+
+    public void scheduleDeletingFinishedTasks();
 }

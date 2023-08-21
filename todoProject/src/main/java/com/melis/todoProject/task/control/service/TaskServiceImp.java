@@ -29,8 +29,7 @@ import java.util.Optional;
 @Slf4j
 public class TaskServiceImp implements TaskService {
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
     private final SimpUserRegistry userRegistry;
     private final TaskRepository taskRepository;
     private final ToDoListService toDoListService;
@@ -38,11 +37,12 @@ public class TaskServiceImp implements TaskService {
 
 
     @Autowired
-    public TaskServiceImp(SimpUserRegistry userRegistry, TaskRepository taskRepository, ToDoListServiceImpl toDoListService, UserServiceImp userService) {
+    public TaskServiceImp(SimpMessagingTemplate messagingTemplate, SimpUserRegistry userRegistry, TaskRepository taskRepository, ToDoListServiceImpl toDoListService, UserServiceImp userService) {
         this.taskRepository = taskRepository;
         this.toDoListService = toDoListService;
         this.userService = userService;
         this.userRegistry = userRegistry;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @Override
@@ -105,8 +105,8 @@ public class TaskServiceImp implements TaskService {
     }
 
     @Override
-    @Scheduled(fixedDelay = 2000)
-    public void scheduleDeletionFinishedTasks() {
+    @Scheduled(fixedRate = 1000)
+    public void scheduleFetchingUnfinishedTasks() {
         if (userRegistry != null) {
             List<String> users = userRegistry.getUsers().stream()
                     .map(SimpUser::getName)
@@ -127,6 +127,23 @@ public class TaskServiceImp implements TaskService {
                 } catch (Exception e) {
                     log.info("Exception with JSON stringify");
                 }
+            }
+        }
+    }
+
+    @Override
+    @Scheduled(fixedDelay = 5000)
+    public void scheduleDeletingFinishedTasks() {
+        if (userRegistry != null) {
+            List<String> users = userRegistry.getUsers().stream()
+                    .map(SimpUser::getName)
+                    .toList();
+            if (users.size() > 0) {
+                UserModel user = userService.getUser(users.get(0));
+                user.getToDoLists().forEach(item -> {
+                    item.getTask().removeIf(TaskModel::isDone);
+                });
+                userService.saveUser(user);
             }
         }
     }
