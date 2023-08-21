@@ -5,21 +5,21 @@ import com.melis.todoProject.task.entity.dto.TaskAndToDoListsDTO;
 import com.melis.todoProject.task.entity.model.TaskModel;
 
 public interface TaskService {
-    public void addTask(TaskAndToDoListsDTO task);
+    void addTask(TaskAndToDoListsDTO task);
 
-    public TaskModel getTaskById(Integer id);
+    TaskModel getTaskById(Integer id);
 
-    public void setTaskToDone(Integer taskId);
+    void setTaskToDone(Integer taskId);
 
-    public void deleteTask(Integer taskId, String username);
+    void deleteTask(Integer taskId, String username);
 
-    public boolean checkTaskAuthorisation(String username, Integer taskId);
+    boolean checkTaskAuthorisation(String username, Integer taskId);
 
-    public void editTask(TaskModel task);
+    void editTask(TaskModel task);
 
-    public void changeStatus(Integer taskId);
+    void changeStatus(Integer taskId);
 
-    public void scheduleFetchingUnfinishedTasks();
+    void scheduleFetchingUnfinishedTasks();
 
-    public void scheduleDeletingFinishedTasks();
+    void scheduleDeletingFinishedTasks();
 }

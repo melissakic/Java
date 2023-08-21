@@ -26,7 +26,7 @@
         <td><span th:text="${l.id}">Task id</span></td>
         <td><span th:text="${l.taskName}">Task name</span></td>
         <td>
-            <p th:text="${#dates.format(l.taskEndTime, 'dd/MM/yyyy')}"></p>
+            <span th:text="${#dates.format(l.taskEndTime, 'dd/MM/yyyy')}">End time</span>
         </td>
         <td><span th:text="${l.done}">Done</span></td>
         <td>

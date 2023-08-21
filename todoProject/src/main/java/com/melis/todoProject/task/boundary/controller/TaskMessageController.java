@@ -12,8 +12,7 @@ public class TaskMessageController {
 
     @MessageMapping("/add")
     @SendTo("/list/message")
-    public List<TaskModel> greeting(List<TaskModel> message) throws Exception {
-        Thread.sleep(500);
+    public List<TaskModel> greeting(List<TaskModel> message) {
         return message;
     }
 }

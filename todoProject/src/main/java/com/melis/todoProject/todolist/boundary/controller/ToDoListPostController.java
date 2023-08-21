@@ -19,7 +19,6 @@ public class ToDoListPostController {
         this.toDoListService = toDoListService;
     }
 
-
     @PostMapping("/list/add")
     public String addNewList(@ModelAttribute ToDoListModel toDoList, Authentication authentication) {
         toDoListService.addNewListToLoggedUser(toDoList, authentication.getName());

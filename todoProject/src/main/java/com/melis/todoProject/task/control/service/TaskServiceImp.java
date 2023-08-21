@@ -73,7 +73,7 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
     public void setTaskToDone(Integer taskId) {
         Optional<TaskModel> task = taskRepository.findById(taskId);
         task.ifPresent(taskModel -> taskModel.setDone(true));
-        taskRepository.save(task.get());
+        task.ifPresent(taskRepository::save);
     }
 
     @Override
@@ -114,7 +114,7 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
             if (users.size() > 0) {
                 UserModel user = userService.getUser(users.get(0));
                 UserModel userModel = userService.getUser(user.getUsername());
-                List<TaskModel> tasks = new ArrayList<TaskModel>();
+                List<TaskModel> tasks = new ArrayList<>();
                 for (ToDoListModel lists : userModel.getToDoLists()) {
                     for (TaskModel task : lists.getTask()) {
                         if (!task.isDone()) tasks.add(task);
@@ -132,7 +132,7 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
     }
 
     @Override
-    @Scheduled(fixedDelay = 15000)
+    @Scheduled(fixedDelay = 5000)
     public void scheduleDeletingFinishedTasks() {
         if (userRegistry != null) {
             List<String> users = userRegistry.getUsers().stream()
@@ -140,9 +140,7 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
                     .toList();
             if (users.size() > 0) {
                 UserModel user = userService.getUser(users.get(0));
-                user.getToDoLists().forEach(item -> {
-                    item.getTask().removeIf(TaskModel::isDone);
-                });
+                user.getToDoLists().forEach(item -> item.getTask().removeIf(TaskModel::isDone));
                 userService.saveUser(user);
             }
         }

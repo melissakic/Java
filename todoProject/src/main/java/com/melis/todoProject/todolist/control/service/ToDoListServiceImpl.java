@@ -31,7 +31,8 @@ public class ToDoListServiceImpl implements ToDoListService {
     @Override
     public void addNewListToLoggedUser(ToDoListModel toDoListModel, String username) {
         toDoListRepository.save(toDoListModel);
-        addListToUser(toDoListModel, username);
+        UserModel user = userService.getUser(username);
+        user.getToDoLists().add(toDoListModel);
     }
 
     @Override
@@ -71,12 +72,6 @@ public class ToDoListServiceImpl implements ToDoListService {
             if (list.getId().equals(listId)) return false;
         }
         return true;
-    }
-
-    @Override
-    public void addListToUser(ToDoListModel toDoListModel, String username) {
-        UserModel user = userService.getUser(username);
-        user.getToDoLists().add(toDoListModel);
     }
 
     @Override

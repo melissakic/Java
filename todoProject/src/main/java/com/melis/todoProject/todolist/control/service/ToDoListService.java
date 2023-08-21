@@ -14,8 +14,6 @@ public interface ToDoListService {
 
     List<SimpleToDoListModel> getSimpleListsFromUser(String username);
 
-    void addListToUser(ToDoListModel toDoListModel, String username);
-
     ToDoListModel getListByName(String name);
 
     ToDoListModel getListById(Integer id);
