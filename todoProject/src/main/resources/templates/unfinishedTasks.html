@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To do list</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+<h2 th:align="center">Unfinished tasks</h2>
+<h3 th:align="center"><a th:href="@{/list/get}">Home</a></h3>
+<table th:align="center">
+    <thead>
+    <tr>
+        <th>Task id</th>
+        <th>Task name</th>
+        <th>Task end time</th>
+        <th>Delete task</th>
+        <th>Finish task</th>
+        <th>Edit task</th>
+    </tr>
+    </thead>
+    <tbody id="tasksTableBody">
+    </tbody>
+</table>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+<script>
+    const stompClient = new StompJs.Client({
+        brokerURL: 'ws://localhost:8081/websocket'
+    });
+
+    stompClient.onConnect = (frame) => {
+        console.log('Connected to WebSocket: ' + frame);
+        stompClient.subscribe('/list/message', (message) => {
+            const data = JSON.parse(message.body);
+            updateTable(data);
+        });
+    };
+
+    stompClient.onWebSocketError = (error) => {
+        console.error('Error with WebSocket', error);
+    };
+
+    stompClient.activate();
+
+    function updateTable(data) {
+        const tableBody = document.getElementById('tasksTableBody');
+
+        // Clear the table body
+        tableBody.innerHTML = '';
+
+        // Iterate through the data and create rows for the table
+        data.forEach(task => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${task.id}</td>
+                <td>${task.taskName}</td>
+                <td>${task.taskEndTime}</td>
+                <td><button onclick="deleteTask(${task.id})">Delete</button></td>
+                <td><a href="/task/finish/${task.id}">Finish</a></td>
+                <td><a href="/task/edit/${task.id}">Edit</a></td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function deleteTask(id) {
+        if (confirm("Are you sure you want to delete this task?")) {
+            fetch(`/task/delete/${id}`, {
+                method: "DELETE"
+            })
+                .then(response => {
+                    window.location.href = "/task/unfinished";
+                })
+        }
+    }
+</script>
+</body>
+</html>

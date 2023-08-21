@@ -54,23 +54,5 @@
     </tr>
     </tbody>
 </table>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
-<script>
-    const stompClient = new StompJs.Client({
-        brokerURL: 'ws://localhost:8081/websocket'
-    });
-
-    stompClient.onConnect = (frame) => {
-        console.log('Connected to WebSocket: ' + frame);
-    };
-
-    stompClient.onWebSocketError = (error) => {
-        console.error('Error with WebSocket', error);
-    };
-
-    stompClient.activate();
-
-</script>
 </body>
 </html>

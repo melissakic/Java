@@ -25,15 +25,15 @@ public class TaskPostController {
     public String addTask(@ModelAttribute TaskAndToDoListsDTO task) {
         task.getTaskModel().setTaskEndTime(StringToTimestampParser.convertStringToTimestamp(task.getSelectedEndTime()));
         taskService.addTask(task);
-        return "redirect:/list/get";
+        return "redirect:/task/unfinished";
     }
 
     @PostMapping("/task/edit/{id}")
     public String editTask(@ModelAttribute TaskModel taskModel, @PathVariable(name = "id") Integer id, Authentication authentication) {
         TaskModel task = taskService.getTaskById(id);
         if (task == null || taskService.checkTaskAuthorisation(authentication.getName(), id) || !taskModel.getId().equals(task.getId()))
-            return "redirect:/list/get";
+            return "redirect:/task/unfinished";
         taskService.editTask(taskModel);
-        return "redirect:/list/get";
+        return "redirect:/task/unfinished";
     }
 }

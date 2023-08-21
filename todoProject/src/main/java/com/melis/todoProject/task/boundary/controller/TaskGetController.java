@@ -38,7 +38,7 @@ public class TaskGetController {
     public String editTaskForm(@PathVariable(name = "id") Integer id, Authentication authentication, Model model) {
         TaskModel task = taskService.getTaskById(id);
         if (task == null || taskService.checkTaskAuthorisation(authentication.getName(), id))
-            return "redirect:/list/get";
+            return "redirect:/task/unfinished";
         model.addAttribute("task", task);
         return "editTask";
     }
@@ -47,8 +47,14 @@ public class TaskGetController {
     public String addTask(@PathVariable(name = "id") Integer id, Authentication authentication) {
         TaskModel task = taskService.getTaskById(id);
         if (task == null || taskService.checkTaskAuthorisation(authentication.getName(), id))
-            return "redirect:/list/get";
+            return "redirect:/task/unfinished";
         taskService.setTaskToDone(id);
-        return "redirect:/list/get";
+        return "redirect:/task/unfinished";
     }
+
+    @GetMapping("/task/unfinished")
+    public String unfinishedTasks() {
+        return "unfinishedTasks";
+    }
+
 }

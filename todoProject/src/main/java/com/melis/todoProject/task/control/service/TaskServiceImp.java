@@ -1,6 +1,7 @@
 package com.melis.todoProject.task.control.service;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.melis.todoProject.task.control.repository.TaskRepository;
 import com.melis.todoProject.task.entity.dto.TaskAndToDoListsDTO;
 import com.melis.todoProject.task.entity.model.TaskModel;
@@ -13,10 +14,13 @@ import com.melis.todoProject.user.entity.model.UserModel;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,17 +30,19 @@ import java.util.Optional;
 public class TaskServiceImp implements TaskService {
 
     @Autowired
-    private SimpUserRegistry userRegistry;
+    private SimpMessagingTemplate messagingTemplate;
+    private final SimpUserRegistry userRegistry;
     private final TaskRepository taskRepository;
     private final ToDoListService toDoListService;
     private final UserService userService;
 
 
     @Autowired
-    public TaskServiceImp(TaskRepository taskRepository, ToDoListServiceImpl toDoListService, UserServiceImp userService) {
+    public TaskServiceImp(SimpUserRegistry userRegistry, TaskRepository taskRepository, ToDoListServiceImpl toDoListService, UserServiceImp userService) {
         this.taskRepository = taskRepository;
         this.toDoListService = toDoListService;
         this.userService = userService;
+        this.userRegistry = userRegistry;
     }
 
     @Override
@@ -94,7 +100,7 @@ public class TaskServiceImp implements TaskService {
 
 
     @Override
-//    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 2000)
     public void scheduleDeletionFinishedTasks() {
         if (userRegistry != null) {
             List<String> users = userRegistry.getUsers().stream()
@@ -102,10 +108,20 @@ public class TaskServiceImp implements TaskService {
                     .toList();
             if (users.size() > 0) {
                 UserModel user = userService.getUser(users.get(0));
-                user.getToDoLists().forEach(item -> {
-                    item.getTask().removeIf(TaskModel::isDone);
-                });
-                userService.saveUser(user);
+                UserModel userModel = userService.getUser(user.getUsername());
+                List<TaskModel> tasks = new ArrayList<TaskModel>();
+                for (ToDoListModel lists : userModel.getToDoLists()) {
+                    for (TaskModel task : lists.getTask()) {
+                        if (!task.isDone()) tasks.add(task);
+                    }
+                }
+                ObjectMapper objectMapper = new ObjectMapper();
+                try {
+                    String jsonString = objectMapper.writeValueAsString(tasks);
+                    messagingTemplate.convertAndSend("/list/message", jsonString);
+                } catch (Exception e) {
+                    log.info("Exception with JSON stringify");
+                }
             }
         }
     }
