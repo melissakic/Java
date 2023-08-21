@@ -14,6 +14,7 @@ import com.melis.todoProject.user.entity.model.UserModel;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
@@ -27,8 +28,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @Slf4j
-public class TaskServiceImp implements TaskService {
-
+public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFinishedTaskEvent> {
     private final SimpMessagingTemplate messagingTemplate;
     private final SimpUserRegistry userRegistry;
     private final TaskRepository taskRepository;
@@ -132,7 +132,7 @@ public class TaskServiceImp implements TaskService {
     }
 
     @Override
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 15000)
     public void scheduleDeletingFinishedTasks() {
         if (userRegistry != null) {
             List<String> users = userRegistry.getUsers().stream()
@@ -146,5 +146,10 @@ public class TaskServiceImp implements TaskService {
                 userService.saveUser(user);
             }
         }
+    }
+
+    @Override
+    public void onApplicationEvent(DeleteFinishedTaskEvent event) {
+        scheduleDeletingFinishedTasks();
     }
 }

@@ -1,5 +1,6 @@
 package com.melis.todoProject.task.boundary.controller;
 
+import com.melis.todoProject.task.control.service.DeleteFinishedTaskEvent;
 import com.melis.todoProject.task.control.service.TaskService;
 import com.melis.todoProject.task.control.service.TaskServiceImp;
 import com.melis.todoProject.task.entity.dto.TaskAndToDoListsDTO;
@@ -7,6 +8,7 @@ import com.melis.todoProject.task.entity.model.TaskModel;
 import com.melis.todoProject.todolist.control.service.ToDoListService;
 import com.melis.todoProject.todolist.control.service.ToDoListServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +17,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class TaskGetController {
+    private final ApplicationEventPublisher applicationEventPublisher;
     private final TaskService taskService;
     private final ToDoListService toDoListService;
 
     @Autowired
-    public TaskGetController(TaskServiceImp taskService, ToDoListServiceImpl toDoListService) {
+    public TaskGetController(ApplicationEventPublisher applicationEventPublisher, TaskServiceImp taskService, ToDoListServiceImpl toDoListService) {
         this.taskService = taskService;
+        this.applicationEventPublisher = applicationEventPublisher;
         this.toDoListService = toDoListService;
     }
 
@@ -49,6 +53,8 @@ public class TaskGetController {
         if (task == null || taskService.checkTaskAuthorisation(authentication.getName(), id))
             return "redirect:/task/unfinished";
         taskService.setTaskToDone(id);
+        DeleteFinishedTaskEvent finishedTaskEvent = new DeleteFinishedTaskEvent(this);
+        applicationEventPublisher.publishEvent(finishedTaskEvent);
         return "redirect:/task/unfinished";
     }
 
