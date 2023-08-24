@@ -15,6 +15,8 @@ public interface TaskService {
 
     boolean checkTaskAuthorisation(String username, Integer taskId);
 
+    boolean taskIsNotValid(String username, Integer taskId);
+
     void editTask(TaskModel task);
 
     void changeStatus(Integer taskId);

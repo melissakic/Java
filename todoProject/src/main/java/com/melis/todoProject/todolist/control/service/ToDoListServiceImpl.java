@@ -75,6 +75,12 @@ public class ToDoListServiceImpl implements ToDoListService {
     }
 
     @Override
+    public boolean toDoListIsNotValid(String username, Integer listId) {
+        ToDoListModel list = getListById(listId);
+        return (list == null || checkToDoListAuthorisation(username, listId));
+    }
+
+    @Override
     public void deleteList(Integer listId, String username) {
         UserModel user = userService.getUser(username);
         user.getToDoLists().removeIf(item -> item.getId().equals(listId));

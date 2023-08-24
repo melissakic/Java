@@ -31,7 +31,7 @@ public class ToDoListGetController {
     @GetMapping("list/get/{id}")
     public String getListById(@PathVariable(value = "id") Integer id, Model model, Authentication authentication) {
         ToDoListModel list = toDoListService.getListById(id);
-        if (list == null || toDoListService.checkToDoListAuthorisation(authentication.getName(), list.getId()))
+        if (toDoListService.toDoListIsNotValid(authentication.getName(), id))
             return "redirect:/list/get";
         model.addAttribute("list", list.getTask());
         return "getOneList";

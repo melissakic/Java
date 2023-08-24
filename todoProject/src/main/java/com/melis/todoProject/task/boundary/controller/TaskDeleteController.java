@@ -2,7 +2,6 @@ package com.melis.todoProject.task.boundary.controller;
 
 import com.melis.todoProject.task.control.service.TaskService;
 import com.melis.todoProject.task.control.service.TaskServiceImp;
-import com.melis.todoProject.task.entity.model.TaskModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -20,8 +19,7 @@ public class TaskDeleteController {
 
     @DeleteMapping("task/delete/{id}")
     public String deleteTask(@PathVariable Integer id, Authentication authentication) {
-        TaskModel task = taskService.getTaskById(id);
-        if (task == null || taskService.checkTaskAuthorisation(authentication.getName(), id))
+        if (taskService.taskIsNotValid(authentication.getName(), id))
             return "redirect:/task/unfinished";
         taskService.deleteTask(id, authentication.getName());
         return "redirect:/task/unfinished";

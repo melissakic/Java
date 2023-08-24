@@ -64,6 +64,12 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
     }
 
     @Override
+    public boolean taskIsNotValid(String username, Integer taskId) {
+        TaskModel task = getTaskById(taskId);
+        return (task == null || checkTaskAuthorisation(username, taskId));
+    }
+
+    @Override
     public TaskModel getTaskById(Integer id) {
         Optional<TaskModel> task = taskRepository.findById(id);
         return task.orElse(null);
@@ -105,7 +111,7 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
     }
 
     @Override
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 3000)
     public void scheduleFetchingUnfinishedTasks() {
         if (userRegistry != null) {
             List<String> users = userRegistry.getUsers().stream()

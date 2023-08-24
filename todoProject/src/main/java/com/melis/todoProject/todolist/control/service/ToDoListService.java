@@ -20,5 +20,7 @@ public interface ToDoListService {
 
     boolean checkToDoListAuthorisation(String username, Integer listId);
 
+    boolean toDoListIsNotValid(String username, Integer listId);
+
     void deleteList(Integer listId, String username);
 }

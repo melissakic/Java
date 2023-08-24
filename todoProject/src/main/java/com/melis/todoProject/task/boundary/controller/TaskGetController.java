@@ -41,7 +41,7 @@ public class TaskGetController {
     @GetMapping("/task/edit/{id}")
     public String editTaskForm(@PathVariable(name = "id") Integer id, Authentication authentication, Model model) {
         TaskModel task = taskService.getTaskById(id);
-        if (task == null || taskService.checkTaskAuthorisation(authentication.getName(), id))
+        if (taskService.taskIsNotValid(authentication.getName(), id))
             return "redirect:/task/unfinished";
         model.addAttribute("task", task);
         return "editTask";
@@ -49,8 +49,7 @@ public class TaskGetController {
 
     @GetMapping("task/finish/{id}")
     public String finishTask(@PathVariable(name = "id") Integer id, Authentication authentication) {
-        TaskModel task = taskService.getTaskById(id);
-        if (task == null || taskService.checkTaskAuthorisation(authentication.getName(), id))
+        if (taskService.taskIsNotValid(authentication.getName(), id))
             return "redirect:/task/unfinished";
         taskService.setTaskToDone(id);
         DeleteFinishedTaskEvent finishedTaskEvent = new DeleteFinishedTaskEvent(this);
@@ -60,10 +59,9 @@ public class TaskGetController {
 
     @GetMapping("task/changeStatus/{id}")
     public String changeStatus(@PathVariable(name = "id") Integer id, Authentication authentication) {
-        TaskModel task = taskService.getTaskById(id);
-        if (task != null || !taskService.checkTaskAuthorisation(authentication.getName(), id)) {
-            taskService.changeStatus(id);
-        }
+        if (taskService.taskIsNotValid(authentication.getName(), id))
+            return "redirect:/list/get";
+        taskService.changeStatus(id);
         return "redirect:/list/get";
     }
 

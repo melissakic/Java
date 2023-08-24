@@ -30,8 +30,7 @@ public class TaskPostController {
 
     @PostMapping("/task/edit/{id}")
     public String editTask(@ModelAttribute TaskModel taskModel, @PathVariable(name = "id") Integer id, Authentication authentication) {
-        TaskModel task = taskService.getTaskById(id);
-        if (task == null || taskService.checkTaskAuthorisation(authentication.getName(), id) || !taskModel.getId().equals(task.getId()))
+        if (taskService.taskIsNotValid(authentication.getName(), id))
             return "redirect:/task/unfinished";
         taskService.editTask(taskModel);
         return "redirect:/task/unfinished";

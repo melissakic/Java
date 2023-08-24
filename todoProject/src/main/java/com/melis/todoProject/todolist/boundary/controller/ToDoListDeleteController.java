@@ -2,7 +2,6 @@ package com.melis.todoProject.todolist.boundary.controller;
 
 import com.melis.todoProject.todolist.control.service.ToDoListService;
 import com.melis.todoProject.todolist.control.service.ToDoListServiceImpl;
-import com.melis.todoProject.todolist.entity.model.ToDoListModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -20,8 +19,7 @@ public class ToDoListDeleteController {
 
     @DeleteMapping("list/delete/{id}")
     public String deleteList(@PathVariable(value = "id") Integer id, Authentication authentication) {
-        ToDoListModel list = toDoListService.getListById(id);
-        if (list == null || toDoListService.checkToDoListAuthorisation(authentication.getName(), id))
+        if (toDoListService.toDoListIsNotValid(authentication.getName(), id))
             return "redirect:/list/get";
         toDoListService.deleteList(id, authentication.getName());
         return "redirect:/list/get";
