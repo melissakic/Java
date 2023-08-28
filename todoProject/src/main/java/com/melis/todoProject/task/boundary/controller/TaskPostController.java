@@ -1,5 +1,7 @@
 package com.melis.todoProject.task.boundary.controller;
 
+import com.melis.todoProject.exception.customExceptions.TaskNotFoundException;
+import com.melis.todoProject.exception.customExceptions.UserNotOwnerException;
 import com.melis.todoProject.task.control.service.StringToTimestampParser;
 import com.melis.todoProject.task.control.service.TaskService;
 import com.melis.todoProject.task.control.service.TaskServiceImp;
@@ -30,8 +32,9 @@ public class TaskPostController {
 
     @PostMapping("/task/edit/{id}")
     public String editTask(@ModelAttribute TaskModel taskModel, @PathVariable(name = "id") Integer id, Authentication authentication) {
-        if (taskService.taskIsNotValid(authentication.getName(), id))
-            return "redirect:/task/unfinished";
+        if (taskService.checkTaskNotExists(id)) throw new TaskNotFoundException("Task not found");
+        if (taskService.checkTaskAuthorisation(authentication.getName(), id))
+            throw new UserNotOwnerException("You must be owner to edit task");
         taskService.editTask(taskModel);
         return "redirect:/task/unfinished";
     }

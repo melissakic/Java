@@ -1,5 +1,7 @@
 package com.melis.todoProject.task.boundary.controller;
 
+import com.melis.todoProject.exception.customExceptions.TaskNotFoundException;
+import com.melis.todoProject.exception.customExceptions.UserNotOwnerException;
 import com.melis.todoProject.task.control.service.DeleteFinishedTaskEvent;
 import com.melis.todoProject.task.control.service.TaskService;
 import com.melis.todoProject.task.control.service.TaskServiceImp;
@@ -41,16 +43,18 @@ public class TaskGetController {
     @GetMapping("/task/edit/{id}")
     public String editTaskForm(@PathVariable(name = "id") Integer id, Authentication authentication, Model model) {
         TaskModel task = taskService.getTaskById(id);
-        if (taskService.taskIsNotValid(authentication.getName(), id))
-            return "redirect:/task/unfinished";
+        if (taskService.checkTaskNotExists(id)) throw new TaskNotFoundException("Task not found");
+        if (taskService.checkTaskAuthorisation(authentication.getName(), id))
+            throw new UserNotOwnerException("You must be owner to edit task");
         model.addAttribute("task", task);
         return "editTask";
     }
 
     @GetMapping("task/finish/{id}")
     public String finishTask(@PathVariable(name = "id") Integer id, Authentication authentication) {
-        if (taskService.taskIsNotValid(authentication.getName(), id))
-            return "redirect:/task/unfinished";
+        if (taskService.checkTaskNotExists(id)) throw new TaskNotFoundException("Task not found");
+        if (taskService.checkTaskAuthorisation(authentication.getName(), id))
+            throw new UserNotOwnerException("You must be owner to edit task");
         taskService.setTaskToDone(id);
         DeleteFinishedTaskEvent finishedTaskEvent = new DeleteFinishedTaskEvent(this);
         applicationEventPublisher.publishEvent(finishedTaskEvent);
@@ -59,8 +63,9 @@ public class TaskGetController {
 
     @GetMapping("task/changeStatus/{id}")
     public String changeStatus(@PathVariable(name = "id") Integer id, Authentication authentication) {
-        if (taskService.taskIsNotValid(authentication.getName(), id))
-            return "redirect:/list/get";
+        if (taskService.checkTaskNotExists(id)) throw new TaskNotFoundException("Task not found");
+        if (taskService.checkTaskAuthorisation(authentication.getName(), id))
+            throw new UserNotOwnerException("You must be owner to edit task");
         taskService.changeStatus(id);
         return "redirect:/list/get";
     }

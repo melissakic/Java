@@ -46,15 +46,13 @@
     function updateTable(data) {
         const tableBody = document.getElementById('tasksTableBody');
 
-        // Clear the table body
         tableBody.innerHTML = '';
 
-        // Iterate through the data and create rows for the table
         data.forEach(task => {
             const row = document.createElement('tr');
-            const timestamp = new Date(task.taskEndTime); // Convert seconds to milliseconds
+            const timestamp = new Date(task.taskEndTime);
             const day = String(timestamp.getDate()).padStart(2, '0');
-            const month = String(timestamp.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const month = String(timestamp.getMonth() + 1).padStart(2, '0');
             const year = timestamp.getFullYear();
             const formattedDate = `${day}/${month}/${year}`;
             row.innerHTML = `

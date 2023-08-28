@@ -1,5 +1,7 @@
 package com.melis.todoProject.todolist.boundary.controller;
 
+import com.melis.todoProject.exception.customExceptions.ListNotFoundException;
+import com.melis.todoProject.exception.customExceptions.UserNotOwnerException;
 import com.melis.todoProject.todolist.control.service.ToDoListService;
 import com.melis.todoProject.todolist.control.service.ToDoListServiceImpl;
 import com.melis.todoProject.todolist.entity.model.ToDoListModel;
@@ -31,11 +33,13 @@ public class ToDoListGetController {
     @GetMapping("list/get/{id}")
     public String getListById(@PathVariable(value = "id") Integer id, Model model, Authentication authentication) {
         ToDoListModel list = toDoListService.getListById(id);
-        if (toDoListService.toDoListIsNotValid(authentication.getName(), id))
-            return "redirect:/list/get";
+        if (toDoListService.checkToDoListNotExists(id)) throw new ListNotFoundException("List not found");
+        if (toDoListService.checkToDoListAuthorisation(authentication.getName(), id))
+            throw new UserNotOwnerException("You must be owner to display list");
         model.addAttribute("list", list.getTask());
         return "getOneList";
     }
+
 
     @GetMapping("list/add")
     public String formNewList(Model model, Authentication authentication) {

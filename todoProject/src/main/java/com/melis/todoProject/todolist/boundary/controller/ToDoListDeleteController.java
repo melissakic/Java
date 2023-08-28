@@ -1,5 +1,7 @@
 package com.melis.todoProject.todolist.boundary.controller;
 
+import com.melis.todoProject.exception.customExceptions.ListNotFoundException;
+import com.melis.todoProject.exception.customExceptions.UserNotOwnerException;
 import com.melis.todoProject.todolist.control.service.ToDoListService;
 import com.melis.todoProject.todolist.control.service.ToDoListServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,9 @@ public class ToDoListDeleteController {
 
     @DeleteMapping("list/delete/{id}")
     public String deleteList(@PathVariable(value = "id") Integer id, Authentication authentication) {
-        if (toDoListService.toDoListIsNotValid(authentication.getName(), id))
-            return "redirect:/list/get";
+        if (toDoListService.checkToDoListAuthorisation(authentication.getName(), id))
+            throw new UserNotOwnerException("You must be owner to delete list");
+        if (toDoListService.checkToDoListNotExists(id)) throw new ListNotFoundException("List not found");
         toDoListService.deleteList(id, authentication.getName());
         return "redirect:/list/get";
     }

@@ -18,6 +18,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@EnableScheduling
 @Slf4j
 public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFinishedTaskEvent> {
     private final SimpMessagingTemplate messagingTemplate;
@@ -64,9 +66,9 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
     }
 
     @Override
-    public boolean taskIsNotValid(String username, Integer taskId) {
-        TaskModel task = getTaskById(taskId);
-        return (task == null || checkTaskAuthorisation(username, taskId));
+    public boolean checkTaskNotExists(Integer id) {
+        Optional<TaskModel> taskModel = taskRepository.findById(id);
+        return taskModel.isEmpty();
     }
 
     @Override
@@ -154,6 +156,7 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
 
     @Override
     public void onApplicationEvent(DeleteFinishedTaskEvent event) {
+        log.info(event.getSource().toString());
         scheduleDeletingFinishedTasks();
     }
 }

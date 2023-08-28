@@ -75,9 +75,9 @@ public class ToDoListServiceImpl implements ToDoListService {
     }
 
     @Override
-    public boolean toDoListIsNotValid(String username, Integer listId) {
+    public boolean checkToDoListNotExists(Integer listId) {
         ToDoListModel list = getListById(listId);
-        return (list == null || checkToDoListAuthorisation(username, listId));
+        return list == null;
     }
 
     @Override

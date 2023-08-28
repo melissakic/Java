@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ToDoListRepository extends JpaRepository<ToDoListModel, Integer> {
     ToDoListModel findByListName(String listName);
-    
 }
