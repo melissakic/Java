@@ -14,6 +14,11 @@ import java.util.List;
 
 @Data
 @Entity
+@NamedNativeQuery(
+        name = "UserModel.findByUsernameNative",
+        query = "SELECT * FROM User WHERE username = :username",
+        resultClass = UserModel.class
+)
 @Table(name = "User")
 public class UserModel {
     @Id

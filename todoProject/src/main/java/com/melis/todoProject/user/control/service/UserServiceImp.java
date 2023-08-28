@@ -29,7 +29,7 @@ public class UserServiceImp implements UserService {
     @Override
     @Transactional
     public UserModel getUser(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsernameNative(username);
     }
 
     @Override

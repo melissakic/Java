@@ -15,6 +15,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "ToDoList")
+@NamedQuery(
+        name = "ToDoListModel.findByListName",
+        query = "SELECT t FROM ToDoListModel t WHERE t.listName = :listName"
+)
 public class ToDoListModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
