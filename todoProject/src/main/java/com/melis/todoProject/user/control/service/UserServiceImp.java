@@ -2,11 +2,14 @@ package com.melis.todoProject.user.control.service;
 
 
 import com.melis.todoProject.user.control.repository.UserRepository;
+import com.melis.todoProject.user.entity.dto.SimpleUserModel;
 import com.melis.todoProject.user.entity.model.UserModel;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceImp implements UserService {
@@ -35,5 +38,10 @@ public class UserServiceImp implements UserService {
     @Override
     public void saveUser(UserModel user) {
         userRepository.save(user);
+    }
+
+    @Override
+    public List<SimpleUserModel> getAllUsernames() {
+        return userRepository.findAllUsernames();
     }
 }

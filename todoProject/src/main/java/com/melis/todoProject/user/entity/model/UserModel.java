@@ -2,6 +2,7 @@ package com.melis.todoProject.user.entity.model;
 
 
 import com.melis.todoProject.todolist.entity.model.ToDoListModel;
+import com.melis.todoProject.user.entity.dto.SimpleUserModel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
@@ -19,6 +20,13 @@ import java.util.List;
         query = "SELECT * FROM User WHERE username = :username",
         resultClass = UserModel.class
 )
+@NamedNativeQuery(name = "UserModel.findAllUsernames", query = "SELECT username FROM User", resultSetMapping = "SimpleUserModelMapping")
+@SqlResultSetMapping(name = "SimpleUserModelMapping", classes = @ConstructorResult(
+        targetClass = SimpleUserModel.class,
+        columns = {
+                @ColumnResult(name = "username", type = String.class)
+        }
+))
 @Table(name = "User")
 public class UserModel {
     @Id
