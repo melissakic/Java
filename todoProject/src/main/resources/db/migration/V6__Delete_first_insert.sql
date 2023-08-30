@@ -1,0 +1,1 @@
+delete from test.test where id=3

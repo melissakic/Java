@@ -88,6 +88,12 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.15.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>32.1.2-jre</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -96,7 +102,7 @@
         </dependency>
     </dependencies>
 
-    
+
     <build>
         <plugins>
             <plugin>
@@ -109,6 +115,16 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>6.5.7</version>
+                <configuration>
+                    <url>jdbc:mariadb://localhost:3306/test</url>
+                    <user>Melis</user>
+                    <password>melis</password>
                 </configuration>
             </plugin>
         </plugins>
