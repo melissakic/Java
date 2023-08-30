@@ -2,6 +2,7 @@ package com.melis.todoProject.task.boundary.controller;
 
 import com.melis.todoProject.exception.customExceptions.TaskNotFoundException;
 import com.melis.todoProject.exception.customExceptions.UserNotOwnerException;
+import com.melis.todoProject.locking.LockTemplate;
 import com.melis.todoProject.task.control.service.StringToTimestampParser;
 import com.melis.todoProject.task.control.service.TaskService;
 import com.melis.todoProject.task.control.service.TaskServiceImp;
@@ -17,9 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class TaskPostController {
     private final TaskService taskService;
+    private final LockTemplate lockTemplate;
 
     @Autowired
-    public TaskPostController(TaskServiceImp taskService) {
+    public TaskPostController(TaskServiceImp taskService, LockTemplate lockTemplate) {
+        this.lockTemplate = lockTemplate;
         this.taskService = taskService;
     }
 
@@ -35,7 +38,7 @@ public class TaskPostController {
         if (taskService.checkTaskNotExists(id)) throw new TaskNotFoundException("Task not found");
         if (taskService.checkTaskAuthorisation(authentication.getName(), id))
             throw new UserNotOwnerException("You must be owner to edit task");
-        taskService.editTask(taskModel);
+        lockTemplate.setLock(id, () -> taskService.editTask(taskModel));
         return "redirect:/task/unfinished";
     }
 }

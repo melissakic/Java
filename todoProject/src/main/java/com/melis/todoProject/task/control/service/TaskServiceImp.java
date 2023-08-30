@@ -28,6 +28,7 @@ import java.util.Optional;
 
 @Service
 @EnableScheduling
+@Transactional
 @Slf4j
 public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFinishedTaskEvent> {
     private final SimpMessagingTemplate messagingTemplate;
@@ -46,7 +47,6 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
         this.messagingTemplate = messagingTemplate;
     }
 
-    @Transactional
     @Override
     public void addTask(TaskAndToDoListsDTO task) {
         taskRepository.save(task.getTaskModel());
@@ -54,7 +54,6 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
         model.getTask().add(task.getTaskModel());
     }
 
-    @Transactional
     @Override
     public boolean checkTaskAuthorisation(String username, Integer taskId) {
         UserModel user = userService.getUser(username);
@@ -66,21 +65,18 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
         return true;
     }
 
-    @Transactional
     @Override
     public boolean checkTaskNotExists(Integer id) {
         Optional<TaskModel> taskModel = taskRepository.findById(id);
         return taskModel.isEmpty();
     }
 
-    @Transactional
     @Override
     public TaskModel getTaskById(Integer id) {
         Optional<TaskModel> task = taskRepository.findById(id);
         return task.orElse(null);
     }
 
-    @Transactional
     @Override
     public void setTaskToDone(Integer taskId) {
         Optional<TaskModel> task = taskRepository.findById(taskId);
@@ -88,7 +84,6 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
         task.ifPresent(taskRepository::save);
     }
 
-    @Transactional
     @Override
     public void deleteTask(Integer taskId, String username) {
         UserModel user = userService.getUser(username);
@@ -106,13 +101,11 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
         taskRepository.deleteById(taskId);
     }
 
-    @Transactional
     @Override
     public void editTask(TaskModel task) {
         taskRepository.save(task);
     }
 
-    @Transactional
     @Override
     public void changeStatus(Integer taskId) {
         Optional<TaskModel> task = taskRepository.findById(taskId);
@@ -120,7 +113,6 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
     }
 
     @Override
-    @Transactional
     @Scheduled(fixedRate = 3000)
     public void scheduleFetchingUnfinishedTasks() {
         if (userRegistry != null) {
@@ -148,7 +140,6 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
     }
 
     @Override
-    @Transactional
     @Scheduled(fixedDelay = 5000)
     public void scheduleDeletingFinishedTasks() {
         if (userRegistry != null) {
@@ -163,7 +154,6 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
         }
     }
 
-    @Transactional
     @Override
     public void onApplicationEvent(DeleteFinishedTaskEvent event) {
         log.info(event.getSource().toString());

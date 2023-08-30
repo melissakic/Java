@@ -2,6 +2,7 @@ package com.melis.todoProject.task.boundary.controller;
 
 import com.melis.todoProject.exception.customExceptions.TaskNotFoundException;
 import com.melis.todoProject.exception.customExceptions.UserNotOwnerException;
+import com.melis.todoProject.locking.LockTemplate;
 import com.melis.todoProject.task.control.service.DeleteFinishedTaskEvent;
 import com.melis.todoProject.task.control.service.TaskService;
 import com.melis.todoProject.task.control.service.TaskServiceImp;
@@ -20,12 +21,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class TaskGetController {
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final LockTemplate lockTemplate;
     private final TaskService taskService;
     private final ToDoListService toDoListService;
 
     @Autowired
-    public TaskGetController(ApplicationEventPublisher applicationEventPublisher, TaskServiceImp taskService, ToDoListServiceImpl toDoListService) {
+    public TaskGetController(LockTemplate lockTemplate, ApplicationEventPublisher applicationEventPublisher, TaskServiceImp taskService, ToDoListServiceImpl toDoListService) {
         this.taskService = taskService;
+        this.lockTemplate = lockTemplate;
         this.applicationEventPublisher = applicationEventPublisher;
         this.toDoListService = toDoListService;
     }
@@ -55,7 +58,7 @@ public class TaskGetController {
         if (taskService.checkTaskNotExists(id)) throw new TaskNotFoundException("Task not found");
         if (taskService.checkTaskAuthorisation(authentication.getName(), id))
             throw new UserNotOwnerException("You must be owner to edit task");
-        taskService.setTaskToDone(id);
+        lockTemplate.setLock(id, () -> taskService.setTaskToDone(id));
         DeleteFinishedTaskEvent finishedTaskEvent = new DeleteFinishedTaskEvent(this);
         applicationEventPublisher.publishEvent(finishedTaskEvent);
         return "redirect:/task/unfinished";
@@ -66,7 +69,7 @@ public class TaskGetController {
         if (taskService.checkTaskNotExists(id)) throw new TaskNotFoundException("Task not found");
         if (taskService.checkTaskAuthorisation(authentication.getName(), id))
             throw new UserNotOwnerException("You must be owner to edit task");
-        taskService.changeStatus(id);
+        lockTemplate.setLock(id, () -> taskService.changeStatus(id));
         return "redirect:/list/get";
     }
 
