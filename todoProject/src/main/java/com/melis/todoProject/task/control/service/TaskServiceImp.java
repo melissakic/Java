@@ -120,6 +120,7 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
     }
 
     @Override
+    @Transactional
     @Scheduled(fixedRate = 3000)
     public void scheduleFetchingUnfinishedTasks() {
         if (userRegistry != null) {
@@ -147,6 +148,7 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
     }
 
     @Override
+    @Transactional
     @Scheduled(fixedDelay = 5000)
     public void scheduleDeletingFinishedTasks() {
         if (userRegistry != null) {
@@ -161,6 +163,7 @@ public class TaskServiceImp implements TaskService, ApplicationListener<DeleteFi
         }
     }
 
+    @Transactional
     @Override
     public void onApplicationEvent(DeleteFinishedTaskEvent event) {
         log.info(event.getSource().toString());
