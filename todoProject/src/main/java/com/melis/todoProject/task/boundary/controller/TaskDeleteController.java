@@ -27,7 +27,8 @@ public class TaskDeleteController {
         if (taskService.checkTaskNotExists(id)) throw new TaskNotFoundException("Task not found");
         if (taskService.checkTaskAuthorisation(authentication.getName(), id))
             throw new UserNotOwnerException("You must be owner to delete task");
-        lockTemplate.setLock(id, () -> taskService.deleteTask(id, authentication.getName()));
+        lockTemplate.setLock(id, () -> taskService.deleteTask(id, authentication.getName())
+        );
         return "redirect:/task/unfinished";
     }
 }
