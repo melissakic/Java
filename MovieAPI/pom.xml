@@ -11,9 +11,15 @@
 	<groupId>com.melis</groupId>
 	<artifactId>MovieAPI</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>MovieAPI</name>
+    <packaging>pom</packaging>
+    <name>MovieAPI</name>
 	<description>Microservices project for movie fetching</description>
-	<properties>
+    <modules>
+        <module>MovieCatalogService</module>
+        <module>MovieRatingService</module>
+        <module>MovieInfoService</module>
+    </modules>
+    <properties>
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
