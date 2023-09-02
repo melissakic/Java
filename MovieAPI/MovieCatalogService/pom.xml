@@ -10,4 +10,17 @@
     <artifactId>MovieCatalogService</artifactId>
     <name>Archetype - MovieCatalogService</name>
     <url>http://maven.apache.org</url>
+    <dependencies>
+        <dependency>
+            <groupId>com.melis.MovieAPI</groupId>
+            <artifactId>MovieInfoService</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.melis.MovieAPI</groupId>
+            <artifactId>MovieRatingService</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 </project>

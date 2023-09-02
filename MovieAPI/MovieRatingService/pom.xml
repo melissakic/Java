@@ -8,6 +8,6 @@
     </parent>
     <groupId>com.melis.MovieAPI</groupId>
     <artifactId>MovieRatingService</artifactId>
-    <name>Archetype - MovieRatingService</name>
-    <url>http://maven.apache.org</url>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 </project>
