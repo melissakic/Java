@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 @Service
@@ -20,22 +21,35 @@ public class MovieCatalogServiceImp implements MovieCatalogService {
         this.webClient = webClient;
     }
 
-    @Override
-    public Map<String, Double> getRatingsFromUser(Integer userId) {
-        Mono<Map<String, Double>> ratings = webClient
+    private Mono<Map<String, Double>> getRatingsFromUser(Integer userId) {
+        return webClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path("/ratings").queryParam("userId", userId).build())
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Map<String, Double>>() {
+                .bodyToMono(new ParameterizedTypeReference<>() {
                 });
-        return ratings.block();
     }
 
-    @Override
-    public Mono<ResultModel> getInfoFromUser(Integer movieId) {
+    private Mono<ResultModel> getInfoFromUser(Integer movieId) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/info").queryParam("movieId", movieId).build())
                 .retrieve()
                 .bodyToMono(ResultModel.class);
+    }
+
+    @Override
+    public ArrayList<ResultModel> getMovieInfo(Integer userId) {
+        Map<String, Double> ratings = getRatingsFromUser(userId).block();
+        ArrayList<ResultModel> results = new ArrayList<>();
+        if (ratings != null) {
+            ratings.forEach((movieId, rating) -> {
+                ResultModel resultModel = getInfoFromUser(Integer.valueOf(movieId)).block();
+                if (resultModel != null) {
+                    resultModel.setRating(rating);
+                }
+                results.add(resultModel);
+            });
+        }
+        return results;
     }
 }

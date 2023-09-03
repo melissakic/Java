@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 @RestController
 public class MovieCatalogRestController {
@@ -23,15 +22,7 @@ public class MovieCatalogRestController {
 
     @GetMapping("/movie")
     public ArrayList<ResultModel> getMovie(@RequestBody Integer userId) {
-        Map<String, Double> ratings = movieCatalogService.getRatingsFromUser(userId);
-        ArrayList<ResultModel> results = new ArrayList<>();
-        ratings.forEach((movieId, rating) -> {
-            ResultModel resultModel = movieCatalogService.getInfoFromUser(Integer.valueOf(movieId)).block();
-            resultModel.setUserId(String.valueOf(userId));
-            resultModel.setRating(rating);
-            results.add(resultModel);
-        });
-        return results;
+        return movieCatalogService.getMovieInfo(userId);
     }
 
 }
