@@ -1,5 +1,6 @@
 package com.melis.MovieAPI.MovieCatalogService.movieCatalog.control.service;
 
+import com.melis.MovieAPI.MovieInfoService.movieInfo.entity.model.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
@@ -21,12 +22,20 @@ public class MovieCatalogServiceImp implements MovieCatalogService {
 
     @Override
     public Map<String, Double> getRatingsFromUser(Integer userId) {
-        Mono<Map<String, Double>> testResultMono = webClient
+        Mono<Map<String, Double>> ratings = webClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path("/ratings").queryParam("userId", userId).build())
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Double>>() {
                 });
-        return testResultMono.block();
+        return ratings.block();
+    }
+
+    @Override
+    public Mono<ResultModel> getInfoFromUser(Integer movieId) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/info").queryParam("movieId", movieId).build())
+                .retrieve()
+                .bodyToMono(ResultModel.class);
     }
 }
