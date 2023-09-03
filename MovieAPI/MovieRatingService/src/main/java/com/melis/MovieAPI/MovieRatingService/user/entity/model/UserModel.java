@@ -1,4 +1,4 @@
-package com.melis.MovieAPI.MovieCatalogService.user.entity.model;
+package com.melis.MovieAPI.MovieRatingService.user.entity.model;
 
 import jakarta.persistence.*;
 import lombok.Data;

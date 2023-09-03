@@ -7,7 +7,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class Beans {
     @Bean
-    public WebClient localApiClient(){
+    public WebClient localApiClient() {
         return WebClient.create("https://api.themoviedb.org/");
     }
+
 }
