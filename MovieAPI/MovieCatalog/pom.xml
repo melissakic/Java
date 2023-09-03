@@ -7,7 +7,18 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>com.melis.MovieAPI</groupId>
-    <artifactId>MovieRatingService</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>MovieCatalog</artifactId>
     <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>com.melis.MovieAPI</groupId>
+            <artifactId>MovieRating</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.melis.MovieAPI</groupId>
+            <artifactId>MovieInfo</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>

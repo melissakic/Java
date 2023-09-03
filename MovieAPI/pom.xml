@@ -15,9 +15,9 @@
     <name>MovieAPI</name>
     <description>Microservices project for movie fetching</description>
     <modules>
-        <module>MovieCatalogService</module>
-        <module>MovieRatingService</module>
-        <module>MovieInfoService</module>
+        <module>MovieCatalog</module>
+        <module>MovieInfo</module>
+        <module>MovieRating</module>
     </modules>
     <properties>
         <java.version>17</java.version>

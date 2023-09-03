@@ -29,6 +29,6 @@ public class UserRestController {
     @GetMapping("/ratings")
     public Map<String, Double> getRatings(@RequestBody Integer userId) {
         Map<String, Double> ratings = userService.getRatings(userId);
-        return null;
+        return ratings;
     }
 }

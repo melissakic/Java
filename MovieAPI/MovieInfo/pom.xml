@@ -7,9 +7,6 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>com.melis.MovieAPI</groupId>
-    <artifactId>MovieCatalogService</artifactId>
-    <name>Archetype - MovieCatalogService</name>
-    <url>http://maven.apache.org</url>
-   
-
+    <artifactId>MovieInfo</artifactId>
+    <packaging>jar</packaging>
 </project>
