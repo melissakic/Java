@@ -2,7 +2,7 @@ package com.melis.MovieAPI.MovieInfoService.movieInfo.boundary.control;
 
 import com.melis.MovieAPI.MovieInfoService.movieInfo.control.service.MovieInfoService;
 import com.melis.MovieAPI.MovieInfoService.movieInfo.control.service.MovieInfoServiceImp;
-import com.melis.MovieAPI.MovieInfoService.movieInfo.entity.model.ResultModel;
+import com.melis.MovieAPI.MovieInfoService.movieInfo.entity.model.MovieResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +19,7 @@ public class MovieInfoRestController {
     }
 
     @GetMapping("/info")
-    public ResultModel getMovieInfo(@RequestParam Integer movieId) {
+    public MovieResultModel getMovieInfo(@RequestParam Integer movieId) {
         return movieInfoService.getMovieInfo(movieId);
     }
 }

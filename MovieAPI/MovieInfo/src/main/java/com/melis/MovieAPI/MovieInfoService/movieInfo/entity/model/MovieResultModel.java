@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class ResultModel implements Serializable {
+public class MovieResultModel implements Serializable {
     private Double rating;
     private String movieId;
     private String title;

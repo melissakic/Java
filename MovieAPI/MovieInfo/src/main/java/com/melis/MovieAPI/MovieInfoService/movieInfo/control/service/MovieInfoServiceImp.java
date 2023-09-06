@@ -1,6 +1,6 @@
 package com.melis.MovieAPI.MovieInfoService.movieInfo.control.service;
 
-import com.melis.MovieAPI.MovieInfoService.movieInfo.entity.model.ResultModel;
+import com.melis.MovieAPI.MovieInfoService.movieInfo.entity.model.MovieResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
@@ -22,18 +22,18 @@ public class MovieInfoServiceImp implements MovieInfoService {
     }
 
     @Override
-    public ResultModel getMovieInfo(Integer movieId) {
+    public MovieResultModel getMovieInfo(Integer movieId) {
         Map<String, Object> response = webClient
                 .get()
                 .uri(movieId + apiKey.getKey())
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
                 }).block();
-        ResultModel resultModel = new ResultModel();
-        resultModel.setMovieId(String.valueOf(movieId));
+        MovieResultModel movieResultModel = new MovieResultModel();
+        movieResultModel.setMovieId(String.valueOf(movieId));
         assert response != null;//error null
-        resultModel.setTitle(String.valueOf(response.get("title")));
-        resultModel.setOverview(String.valueOf(response.get("overview")));
-        return resultModel;
+        movieResultModel.setTitle(String.valueOf(response.get("title")));
+        movieResultModel.setOverview(String.valueOf(response.get("overview")));
+        return movieResultModel;
     }
 }

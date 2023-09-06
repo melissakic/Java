@@ -2,7 +2,7 @@ package com.melis.MovieAPI.MovieCatalogService.movieCatalog.boundary.controller;
 
 import com.melis.MovieAPI.MovieCatalogService.movieCatalog.control.service.MovieCatalogService;
 import com.melis.MovieAPI.MovieCatalogService.movieCatalog.control.service.MovieCatalogServiceImp;
-import com.melis.MovieAPI.MovieInfoService.movieInfo.entity.model.ResultModel;
+import com.melis.MovieAPI.MovieInfoService.movieInfo.entity.model.MovieResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +21,7 @@ public class MovieCatalogRestController {
     }
 
     @GetMapping("/movie")
-    public ArrayList<ResultModel> getMovie(@RequestBody Integer userId) {
+    public ArrayList<MovieResultModel> getMovie(@RequestBody Integer userId) {
         return movieCatalogService.getMovieInfo(userId);
     }
 

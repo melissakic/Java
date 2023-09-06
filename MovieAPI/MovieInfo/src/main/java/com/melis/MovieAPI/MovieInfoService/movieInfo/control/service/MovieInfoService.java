@@ -1,8 +1,8 @@
 package com.melis.MovieAPI.MovieInfoService.movieInfo.control.service;
 
-import com.melis.MovieAPI.MovieInfoService.movieInfo.entity.model.ResultModel;
+import com.melis.MovieAPI.MovieInfoService.movieInfo.entity.model.MovieResultModel;
 
 public interface MovieInfoService {
 
-    ResultModel getMovieInfo(Integer movieId);
+    MovieResultModel getMovieInfo(Integer movieId);
 }
