@@ -1,0 +1,41 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8083
+  description: Generated server url
+paths:
+  /info:
+    get:
+      tags:
+      - movie-info-rest-controller
+      operationId: getMovieInfo
+      parameters:
+      - name: movieId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MovieResultModel'
+components:
+  schemas:
+    MovieResultModel:
+      type: object
+      properties:
+        rating:
+          type: number
+          format: double
+        movieId:
+          type: string
+        title:
+          type: string
+        overview:
+          type: string

@@ -19,6 +19,7 @@ public class MovieCatalogServiceImp implements MovieCatalogService {
     private final WebClient ratingAPIClient;
     private final WebClient infoAPIClient;
 
+
     @Autowired
     public MovieCatalogServiceImp(@Qualifier("ratingAPIClient") WebClient ratingAPIClient, @Qualifier("infoAPIClient") WebClient infoAPIClient) {
         this.infoAPIClient = infoAPIClient;
@@ -41,8 +42,9 @@ public class MovieCatalogServiceImp implements MovieCatalogService {
                 .bodyToMono(MovieResultModel.class);
     }
 
+
     @Override
-    public ArrayList<MovieResultModel> getMovieInfo(Integer userId) {
+    public ArrayList<MovieResultModel> getInfo(Integer userId) {
         Map<String, Double> ratings = getRatingsFromUser(userId).block();
         ArrayList<MovieResultModel> results = new ArrayList<>();
         List<CompletableFuture<Void>> futures = new ArrayList<>();

@@ -22,7 +22,7 @@ public class MovieCatalogRestController {
 
     @GetMapping("/movie")
     public ArrayList<MovieResultModel> getMovie(@RequestParam Integer userId) {
-        return movieCatalogService.getMovieInfo(userId);
+        return movieCatalogService.getInfo(userId);
     }
 
 }

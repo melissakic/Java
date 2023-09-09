@@ -5,5 +5,5 @@ import com.melis.MovieAPI.MovieInfoService.movieInfo.entity.model.MovieResultMod
 import java.util.ArrayList;
 
 public interface MovieCatalogService {
-    ArrayList<MovieResultModel> getMovieInfo(Integer userId);
+    ArrayList<MovieResultModel> getInfo(Integer userId);
 }
