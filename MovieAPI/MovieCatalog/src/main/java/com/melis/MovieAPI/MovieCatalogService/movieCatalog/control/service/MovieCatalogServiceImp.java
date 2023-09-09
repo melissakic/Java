@@ -16,15 +16,17 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class MovieCatalogServiceImp implements MovieCatalogService {
 
-    private final WebClient webClient;
+    private final WebClient ratingAPIClient;
+    private final WebClient infoAPIClient;
 
     @Autowired
-    public MovieCatalogServiceImp(@Qualifier("localAPIClient") WebClient webClient) {
-        this.webClient = webClient;
+    public MovieCatalogServiceImp(@Qualifier("ratingAPIClient") WebClient ratingAPIClient, @Qualifier("infoAPIClient") WebClient infoAPIClient) {
+        this.infoAPIClient = infoAPIClient;
+        this.ratingAPIClient = ratingAPIClient;
     }
 
     private Mono<Map<String, Double>> getRatingsFromUser(Integer userId) {
-        return webClient
+        return ratingAPIClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path("/ratings").queryParam("userId", userId).build())
                 .retrieve()
@@ -33,7 +35,7 @@ public class MovieCatalogServiceImp implements MovieCatalogService {
     }
 
     private Mono<MovieResultModel> getInfoFromUser(Integer movieId) {
-        return webClient.get()
+        return infoAPIClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/info").queryParam("movieId", movieId).build())
                 .retrieve()
                 .bodyToMono(MovieResultModel.class);

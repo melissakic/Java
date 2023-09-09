@@ -18,7 +18,6 @@
         <module>MovieCatalog</module>
         <module>MovieInfo</module>
         <module>MovieRating</module>
-        <module>Utilities</module>
     </modules>
     <properties>
         <java.version>17</java.version>
