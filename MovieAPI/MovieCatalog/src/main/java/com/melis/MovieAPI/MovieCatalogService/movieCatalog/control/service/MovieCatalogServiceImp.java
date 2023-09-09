@@ -1,6 +1,7 @@
 package com.melis.MovieAPI.MovieCatalogService.movieCatalog.control.service;
 
-import com.melis.MovieAPI.MovieInfoService.movieInfo.entity.model.MovieResultModel;
+import org.melis.api.InfoApi;
+import org.melis.model.MovieResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
@@ -17,12 +18,11 @@ import java.util.concurrent.CompletableFuture;
 public class MovieCatalogServiceImp implements MovieCatalogService {
 
     private final WebClient ratingAPIClient;
-    private final WebClient infoAPIClient;
-
+    private final InfoApi infoApi;
 
     @Autowired
-    public MovieCatalogServiceImp(@Qualifier("ratingAPIClient") WebClient ratingAPIClient, @Qualifier("infoAPIClient") WebClient infoAPIClient) {
-        this.infoAPIClient = infoAPIClient;
+    public MovieCatalogServiceImp(@Qualifier("ratingAPIClient") WebClient ratingAPIClient, InfoAPIDelegate infoApi) {
+        this.infoApi = infoApi;
         this.ratingAPIClient = ratingAPIClient;
     }
 
@@ -35,13 +35,9 @@ public class MovieCatalogServiceImp implements MovieCatalogService {
                 });
     }
 
-    private Mono<MovieResultModel> getInfoFromUser(Integer movieId) {
-        return infoAPIClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/info").queryParam("movieId", movieId).build())
-                .retrieve()
-                .bodyToMono(MovieResultModel.class);
+    private MovieResultModel getInfoFromUser(Integer movieId) {
+        return infoApi.getMovieInfo(movieId).getBody();
     }
-
 
     @Override
     public ArrayList<MovieResultModel> getInfo(Integer userId) {
@@ -51,7 +47,7 @@ public class MovieCatalogServiceImp implements MovieCatalogService {
         if (ratings != null) {
             ratings.forEach((movieId, rating) -> {
                 futures.add(CompletableFuture.supplyAsync(() ->
-                                getInfoFromUser(Integer.valueOf(movieId)).block())
+                                getInfoFromUser(Integer.valueOf(movieId)))
                         .thenAccept(movieResultModel -> {
                             movieResultModel.setRating(rating);
                             results.add(movieResultModel);

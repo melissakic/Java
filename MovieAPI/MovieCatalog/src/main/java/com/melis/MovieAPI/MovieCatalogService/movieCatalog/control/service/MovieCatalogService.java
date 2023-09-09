@@ -1,6 +1,6 @@
 package com.melis.MovieAPI.MovieCatalogService.movieCatalog.control.service;
 
-import com.melis.MovieAPI.MovieInfoService.movieInfo.entity.model.MovieResultModel;
+import org.melis.model.MovieResultModel;
 
 import java.util.ArrayList;
 

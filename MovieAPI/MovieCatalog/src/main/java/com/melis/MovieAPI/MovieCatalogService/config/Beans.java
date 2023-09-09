@@ -16,4 +16,5 @@ public class Beans {
     public WebClient infoAPIClient() {
         return WebClient.builder().baseUrl("http://localhost:8083").build();
     }
+
 }
