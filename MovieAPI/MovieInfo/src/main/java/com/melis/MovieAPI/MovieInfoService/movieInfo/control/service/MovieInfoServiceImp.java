@@ -3,11 +3,8 @@ package com.melis.MovieAPI.MovieInfoService.movieInfo.control.service;
 import com.melis.MovieAPI.MovieInfoService.movieInfo.entity.model.MovieResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.util.Map;
 
 @Service
 public class MovieInfoServiceImp implements MovieInfoService {
@@ -23,17 +20,14 @@ public class MovieInfoServiceImp implements MovieInfoService {
 
     @Override
     public MovieResultModel getMovieInfo(Integer movieId) {
-        Map<String, Object> response = webClient
+        MovieResultModel movieResultModel = webClient
                 .get()
                 .uri(movieId + apiKey.getKey())
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
-                }).block();
-        MovieResultModel movieResultModel = new MovieResultModel();
-        movieResultModel.setMovieId(String.valueOf(movieId));
-        assert response != null;//error null
-        movieResultModel.setTitle(String.valueOf(response.get("title")));
-        movieResultModel.setOverview(String.valueOf(response.get("overview")));
+                .bodyToMono(MovieResultModel.class).block();
+        if (movieResultModel != null) {
+            movieResultModel.setMovieId(String.valueOf(movieId));
+        }
         return movieResultModel;
     }
 }
